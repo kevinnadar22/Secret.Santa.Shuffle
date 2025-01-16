@@ -8,7 +8,7 @@
 
 {% block header_buttons %}
 <a href="{{ url_for('main.index') }}"
-    class="flex items-center space-x-2 px-4 py-2 bg-red-700 rounded-lg hover:bg-red-800 transition">
+    class="flex items-center space-x-2 px-4 py-2 bg-amber-600 rounded-lg hover:bg-amber-700 transition">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
     </svg>
@@ -18,16 +18,26 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
-    <!-- Room Info Card -->
-    <div class="bg-white rounded-xl shadow-xl p-8 mb-8">
+    <div class="christmas-inner-card relative mb-8">
+        <!-- Decorative Elements -->
+        <div class="festive-border"></div>
+        <div class="candy-cane-border"></div>
+        <div class="corner-decoration top-left-decoration"></div>
+        <div class="corner-decoration top-right-decoration"></div>
+        <div class="corner-decoration bottom-left-decoration"></div>
+        <div class="corner-decoration bottom-right-decoration"></div>
+
+        <!-- Room Info -->
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
             <div class="text-center sm:text-left">
-                <h1 class="text-4xl font-bold text-gray-800">Room: {{room_code}}</h1>
+                <h1 class="christmas-title text-4xl font-bold">
+                    Room: {{room_code}}
+                </h1>
                 <p class="text-gray-600 mt-2">Share this code with your friends to join!</p>
             </div>
             <div class="flex space-x-2">
                 <button id="share_button" onclick="shareRoom()" title="Share Room"
-                    class="p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200">
+                    class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                             d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
@@ -35,7 +45,7 @@
                     </svg>
                 </button>
                 <button id="copy_button" onclick="copyRoomLink()" title="Copy Link"
-                    class="p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200">
+                    class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                             d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
@@ -45,35 +55,29 @@
             </div>
         </div>
 
-        <!-- Participants Section -->
+        <!-- Participants Section with Christmas styling -->
         <div class="grid md:grid-cols-2 gap-8">
             <!-- Admin Section -->
-            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                        </path>
-                    </svg>
+            <div class="christmas-inner-card bg-amber-50 relative">
+                <div class="corner-decoration top-left-decoration"></div>
+                <div class="corner-decoration top-right-decoration"></div>
+                <h2 class="christmas-title text-2xl font-bold mb-4">
                     Admin
                 </h2>
                 <div id="admin_info" class="mt-4">
-                    <!-- Admin info will be added here -->
+                    <!-- Admin info will be populated by JavaScript -->
                 </div>
             </div>
 
             <!-- Members Section -->
-            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                        </path>
-                    </svg>
+            <div class="christmas-inner-card bg-amber-50 relative">
+                <div class="corner-decoration top-left-decoration"></div>
+                <div class="corner-decoration top-right-decoration"></div>
+                <h2 class="christmas-title text-2xl font-bold mb-4">
                     Members
                 </h2>
                 <ul id="member_list" class="space-y-3">
-                    <!-- Members will be dynamically added here -->
+                    <!-- Members list will be populated by JavaScript -->
                 </ul>
             </div>
         </div>
@@ -81,7 +85,7 @@
         <!-- Admin Controls -->
         <div id="admin_controls" class="hidden mt-8">
             <button id="start_raffle" onclick="startRaffle()"
-                class="w-full px-6 py-4 bg-green-600 text-white rounded-xl hover:bg-green-700 transition duration-200 flex items-center justify-center gap-2 text-lg font-semibold">
+                class="christmas-button w-full px-6 py-4 bg-green-600 text-white rounded-xl hover:bg-green-700 transition duration-200 flex items-center justify-center gap-2 text-lg font-semibold">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -95,30 +99,35 @@
     </div>
 
     <!-- Rules Card -->
-    <div class="bg-white rounded-xl shadow-xl p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">How It Works</h2>
+    <div class="how-it-works mt-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">How It Works</h2>
         <div class="grid md:grid-cols-3 gap-6">
-            <div class="flex flex-col items-center text-center p-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-blue-600 text-xl font-bold">1</span>
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mb-4 border-2 border-amber-200">
+                        <span class="text-amber-600 text-xl font-bold">1</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">Join Room</h3>
+                    <p class="text-gray-600">Share the room code with your friends to join the Secret Santa group</p>
                 </div>
-                <h3 class="font-semibold mb-2">Join Room</h3>
-                <p class="text-gray-600">Share the room code with your friends to join the Secret Santa group
-                </p>
             </div>
-            <div class="flex flex-col items-center text-center p-4">
-                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-green-600 text-xl font-bold">2</span>
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4 border-2 border-green-200">
+                        <span class="text-green-600 text-xl font-bold">2</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">Wait for Others</h3>
+                    <p class="text-gray-600">Share the room code with friends and wait for everyone to join</p>
                 </div>
-                <h3 class="font-semibold mb-2">Start Raffle</h3>
-                <p class="text-gray-600">Admin starts the raffle when everyone has joined</p>
             </div>
-            <div class="flex flex-col items-center text-center p-4">
-                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-purple-600 text-xl font-bold">3</span>
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-4 border-2 border-purple-200">
+                        <span class="text-purple-600 text-xl font-bold">3</span>
+                    </div>
+                    <h3 class="font-semibold mb-2">Get Matched</h3>
+                    <p class="text-gray-600">Once everyone's ready, start the raffle to get your Secret Santa match!</p>
                 </div>
-                <h3 class="font-semibold mb-2">Get Match</h3>
-                <p class="text-gray-600">Each person gets assigned their Secret Santa recipient</p>
             </div>
         </div>
     </div>
@@ -224,10 +233,10 @@
     function updateMemberList(users, admin) {
         const adminInfo = document.getElementById('admin_info');
         adminInfo.innerHTML = `
-            <div class="flex items-center space-x-3 bg-white p-3 rounded-lg border border-purple-200">
-                <span class="w-4 h-4 bg-purple-500 rounded-full"></span>
-                <span class="text-gray-800 font-medium">${admin.name}</span>
-                <span class="text-sm text-purple-600 font-semibold">(Admin)</span>
+            <div class="flex items-center space-x-3 bg-amber-100 p-3 rounded-lg border border-amber-200">
+                <span class="w-4 h-4 bg-amber-500 rounded-full"></span>
+                <span class="text-amber-800 font-medium">${admin.name}</span>
+                <span class="text-sm text-amber-600 font-semibold">(Admin)</span>
             </div>
         `;
 
@@ -236,11 +245,11 @@
         users.forEach(user => {
             if (user.id !== admin.id) {
                 const li = document.createElement('li');
-                li.className = 'flex items-center justify-between bg-white p-3 rounded-lg border border-green-200';
+                li.className = 'flex items-center justify-between bg-amber-100 p-3 rounded-lg border border-amber-200';
                 li.innerHTML = `
                     <div class="flex items-center space-x-3">
-                        <span class="w-4 h-4 bg-green-500 rounded-full"></span>
-                        <span class="text-gray-800 font-medium">${user.name}</span>
+                        <span class="w-4 h-4 bg-amber-500 rounded-full"></span>
+                        <span class="text-amber-800 font-medium">${user.name}</span>
                     </div>
                     ${isAdmin ? `
                         <button onclick="kickUser('${user.id}')" 
@@ -324,34 +333,34 @@
         // Define styles based on type
         const styles = {
             success: {
-                bg: 'bg-green-100',
-                text: 'text-green-800',
-                button: 'bg-green-600 hover:bg-green-700',
-                icon: `<svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                bg: 'bg-amber-50',
+                text: 'text-amber-800',
+                button: 'bg-amber-600 hover:bg-amber-700',
+                icon: `<svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                        </svg>`
             },
             error: {
-                bg: 'bg-red-100',
+                bg: 'bg-red-50',
                 text: 'text-red-800',
-                button: 'bg-red-600 hover:bg-red-700',
+                button: 'bg-amber-600 hover:bg-amber-700',
                 icon: `<svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                        </svg>`
             },
             warning: {
-                bg: 'bg-yellow-100',
-                text: 'text-yellow-800',
-                button: 'bg-yellow-600 hover:bg-yellow-700',
-                icon: `<svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                bg: 'bg-amber-50',
+                text: 'text-amber-800',
+                button: 'bg-amber-600 hover:bg-amber-700',
+                icon: `<svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                        </svg>`
             },
             info: {
-                bg: 'bg-blue-100',
-                text: 'text-blue-800',
-                button: 'bg-blue-600 hover:bg-blue-700',
-                icon: `<svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                bg: 'bg-amber-50',
+                text: 'text-amber-800',
+                button: 'bg-amber-600 hover:bg-amber-700',
+                icon: `<svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                        </svg>`
             }
@@ -362,12 +371,12 @@
         modal.className = 'modal-container fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50';
 
         modal.innerHTML = `
-            <div class="bg-white rounded-xl p-8 max-w-md w-full shadow-xl transform transition-all duration-300 ease-out scale-95 opacity-0">
+            <div class="bg-amber-50 rounded-xl p-8 max-w-md w-full shadow-xl transform transition-all duration-300 ease-out scale-95 opacity-0 border border-amber-200">
                 <div class="flex items-start space-x-4">
                     ${style.icon}
                     <div class="flex-1">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">${title}</h3>
-                        <div class="text-gray-700 text-lg mb-6">${message}</div>
+                        <h3 class="text-2xl font-bold text-amber-800 mb-2">${title}</h3>
+                        <div class="text-amber-700 text-lg mb-6">${message}</div>
                     </div>
                 </div>
                 <button class="w-full px-4 py-2 text-white rounded-lg transition ${style.button}">
@@ -456,8 +465,8 @@
             message: `
                 <div class="space-y-4">
                     <p>Copy this link to share:</p>
-                    <div class="p-3 bg-gray-100 rounded-lg break-all select-all">${text}</div>
-                    <p class="text-sm text-gray-600">Tap the link above to select it</p>
+                    <div class="p-3 bg-amber-100 rounded-lg break-all select-all border border-amber-200">${text}</div>
+                    <p class="text-sm text-amber-700">Tap the link above to select it</p>
                 </div>
             `,
             type: 'info',
@@ -485,14 +494,14 @@
 
     function showNamePromptModal() {
         const modalContent = `
-            <div class="bg-white rounded-xl p-8 max-w-md w-full shadow-xl">
-                <h3 class="text-2xl font-bold text-gray-800 mb-4">Enter Your Name</h3>
+            <div class="bg-amber-50 rounded-xl p-8 max-w-md w-full shadow-xl border border-amber-200">
+                <h3 class="text-2xl font-bold text-amber-800 mb-4">Enter Your Name</h3>
                 <input type="text" id="name_input" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="w-full px-4 py-2 border border-amber-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-amber-100 text-amber-800 placeholder-amber-500"
                     placeholder="Your name"
                     maxlength="30">
                 <button onclick="submitName()" 
-                    class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    class="w-full px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition">
                     Join Room
                 </button>
             </div>
