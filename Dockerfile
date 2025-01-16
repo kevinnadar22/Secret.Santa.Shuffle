@@ -32,5 +32,5 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "secret_santa_app:create_app()"]
+# Run the application using run.py
+CMD ["python", "run.py"]
