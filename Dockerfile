@@ -4,7 +4,7 @@ FROM python:3.10.6-slim-buster
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV FLASK_APP secret_santa_app
+ENV FLASK_APP run.py
 ENV FLASK_ENV production
 
 # Create and set working directory
@@ -20,7 +20,7 @@ RUN apt-get update \
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install gunicorn
+    && pip install gunicorn eventlet
 
 # Copy application code
 COPY . .
@@ -32,5 +32,5 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Run the application using run.py
-CMD ["python", "run.py"]
+# Run gunicorn with eventlet worker
+CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:8000", "run:app"]
