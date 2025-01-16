@@ -1,18 +1,36 @@
-# Set the base image
+# Use Python slim image for production
 FROM python:3.10.6-slim-buster
 
-# Install required system packages
-RUN apt-get update && \
-    apt-get install -y ffmpeg libsm6 libxext6 git
-RUN apt-get install build-essential python3-dev -y
-# Set the working directory
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV FLASK_APP secret_santa_app
+ENV FLASK_ENV production
+
+# Create and set working directory
 WORKDIR /app
 
-# Copy the requirements file to the working directory
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install gunicorn
+
+# Copy application code
 COPY . .
 
-# Install the Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Create non-root user for security
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
 
-# Set the command to run the Python script
-CMD [ "python", "main.py" ]
+# Expose port
+EXPOSE 8000
+
+# Run gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "secret_santa_app:create_app()"]

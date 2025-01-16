@@ -1,1 +1,1 @@
-worker: python3 -m main
+web: gunicorn --bind 0.0.0.0:$PORT --workers 4 "secret_santa_app:create_app()"
