@@ -23,6 +23,13 @@ class User(BaseModel):
     def get_dummy_user():
         return User(id="", name="Guest", secret_santa=None)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'secret_santa': self.secret_santa.to_dict() if self.secret_santa else None
+        }
+
 
 class Room(BaseModel):
     id: str

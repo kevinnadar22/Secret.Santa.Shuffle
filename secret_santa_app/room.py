@@ -90,3 +90,29 @@ def handle_start_raffle(data):
     Cache.ROOM_CACHE[data["roomCode"]] = room
 
     emit("raffle_started", room.dict(), to=data["roomCode"])
+
+@socketio.on('kick_user')
+def handle_kick_user(data):
+    room_code = data.get('roomCode')
+    user_id_to_kick = data.get('userId')
+    
+    room = Cache.ROOM_CACHE.get(room_code)
+    if not room:
+        emit('error', {'message': 'Room not found'})
+        return
+
+    # Find and remove the kicked user
+    kicked_user = None
+    for user in room.users[:]:  # Create a copy to iterate
+        if user.id == user_id_to_kick:
+            kicked_user = user
+            room.users.remove(user)
+            break
+
+    if kicked_user:
+        # Emit to all users in the room
+        emit('user_kicked', {
+            'kickedUserId': kicked_user.id,
+            'users': [user.to_dict() for user in room.users],
+            'admin': room.admin.to_dict()
+        }, to=room_code)

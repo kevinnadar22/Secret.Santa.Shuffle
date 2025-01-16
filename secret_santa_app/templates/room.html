@@ -236,10 +236,22 @@
         users.forEach(user => {
             if (user.id !== admin.id) {
                 const li = document.createElement('li');
-                li.className = 'flex items-center space-x-3 bg-white p-3 rounded-lg border border-green-200';
+                li.className = 'flex items-center justify-between bg-white p-3 rounded-lg border border-green-200';
                 li.innerHTML = `
-                    <span class="w-4 h-4 bg-green-500 rounded-full"></span>
-                    <span class="text-gray-800 font-medium">${user.name}</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="w-4 h-4 bg-green-500 rounded-full"></span>
+                        <span class="text-gray-800 font-medium">${user.name}</span>
+                    </div>
+                    ${isAdmin ? `
+                        <button onclick="kickUser('${user.id}')" 
+                            class="text-red-600 hover:text-red-800 transition-colors duration-200"
+                            title="Kick User">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
+                            </svg>
+                        </button>
+                    ` : ''}
                 `;
                 memberList.appendChild(li);
             }
@@ -516,5 +528,35 @@
             nameInput.placeholder = 'Please enter your name';
         }
     }
+
+    function kickUser(userId) {
+        showModal({
+            title: '⚠️ Kick User',
+            message: 'Are you sure you want to kick this user?',
+            type: 'warning',
+            buttonText: 'Yes, Kick User',
+            buttonAction: () => {
+                socket.emit('kick_user', { 
+                    roomCode: roomCode,
+                    userId: userId 
+                });
+            }
+        });
+    }
+
+    socket.on('user_kicked', (data) => {
+        if (data.kickedUserId === socket.id) {
+            showModal({
+                title: '❌ Kicked',
+                message: 'You have been kicked from the room by the admin.',
+                type: 'error',
+                buttonText: 'Return to Home',
+                buttonAction: () => window.location.href = '/'
+            });
+        } else {
+            updateMemberList(data.users, data.admin);
+            checkMemberCount(data.users);
+        }
+    });
 </script>
 {% endblock %}
