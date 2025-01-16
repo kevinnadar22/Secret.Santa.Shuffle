@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}Room {{room_code}} - Secret Santa{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+{% endblock %}
+
+{% block header_buttons %}
+<a href="{{ url_for('main.index') }}"
+    class="flex items-center space-x-2 px-4 py-2 bg-red-700 rounded-lg hover:bg-red-800 transition">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+    <span>Exit Room</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Room Info Card -->
+    <div class="bg-white rounded-xl shadow-xl p-8 mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+            <div class="text-center sm:text-left">
+                <h1 class="text-4xl font-bold text-gray-800">Room: {{room_code}}</h1>
+                <p class="text-gray-600 mt-2">Share this code with your friends to join!</p>
+            </div>
+            <button id="copy_code" onclick="copyRoomCode()"
+                class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                    </path>
+                </svg>
+                Copy Room Code
+            </button>
+        </div>
+
+        <!-- Participants Section -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Admin Section -->
+            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                        </path>
+                    </svg>
+                    Admin
+                </h2>
+                <div id="admin_info" class="mt-4">
+                    <!-- Admin info will be added here -->
+                </div>
+            </div>
+
+            <!-- Members Section -->
+            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    Members
+                </h2>
+                <ul id="member_list" class="space-y-3">
+                    <!-- Members will be dynamically added here -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Admin Controls -->
+        <div id="admin_controls" class="hidden mt-8">
+            <button id="start_raffle" onclick="startRaffle()"
+                class="w-full px-6 py-4 bg-green-600 text-white rounded-xl hover:bg-green-700 transition duration-200 flex items-center justify-center gap-2 text-lg font-semibold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Start Secret Santa Raffle
+            </button>
+            <p id="raffle_warning" class="hidden text-red-500 mt-3 text-center font-medium">
+                ⚠️ At least 3 members required to start the raffle
+            </p>
+        </div>
+    </div>
+
+    <!-- Rules Card -->
+    <div class="bg-white rounded-xl shadow-xl p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">How It Works</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="flex flex-col items-center text-center p-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-blue-600 text-xl font-bold">1</span>
+                </div>
+                <h3 class="font-semibold mb-2">Join Room</h3>
+                <p class="text-gray-600">Share the room code with your friends to join the Secret Santa group
+                </p>
+            </div>
+            <div class="flex flex-col items-center text-center p-4">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-green-600 text-xl font-bold">2</span>
+                </div>
+                <h3 class="font-semibold mb-2">Start Raffle</h3>
+                <p class="text-gray-600">Admin starts the raffle when everyone has joined</p>
+            </div>
+            <div class="flex flex-col items-center text-center p-4">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-purple-600 text-xl font-bold">3</span>
+                </div>
+                <h3 class="font-semibold mb-2">Get Match</h3>
+                <p class="text-gray-600">Each person gets assigned their Secret Santa recipient</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const socket = io();
+    const roomCode = "{{room_code}}";
+    const name = "{{name}}";
+    let isAdmin = false;
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+    });
+
+    socket.emit('join_room', { roomCode: roomCode, name: name });
+    socket.on('room_joined', (data) => {
+        updateMemberList(data.users, data.admin);
+        isAdmin = data.admin.id === socket.id;
+        if (isAdmin) {
+            document.getElementById('admin_controls').classList.remove('hidden');
+            checkMemberCount(data.users);
+        }
+    });
+
+    socket.on("raffle_started", (data) => {
+        const user = data.users.find(user => user.id === socket.id);
+        if (user && user.secret_santa) {
+            showModal({
+                title: '🎄 Your Secret Santa Match!',
+                message: `You will be the Secret Santa for: ${user.secret_santa.name}`,
+                type: 'success',
+                buttonText: 'Awesome!'
+            });
+        }
+    });
+
+    socket.on("room_not_found", (data) => {
+        showModal({
+            title: '❌ Room Error',
+            message: data.message,
+            type: 'error',
+            buttonText: 'Go Back',
+            buttonAction: () => window.location.href = '/'
+        });
+    });
+
+    function updateMemberList(users, admin) {
+        const adminInfo = document.getElementById('admin_info');
+        adminInfo.innerHTML = `
+            <div class="flex items-center space-x-3 bg-white p-3 rounded-lg border border-purple-200">
+                <span class="w-4 h-4 bg-purple-500 rounded-full"></span>
+                <span class="text-gray-800 font-medium">${admin.name}</span>
+                <span class="text-sm text-purple-600 font-semibold">(Admin)</span>
+            </div>
+        `;
+
+        const memberList = document.getElementById('member_list');
+        memberList.innerHTML = '';
+        users.forEach(user => {
+            if (user.id !== admin.id) {
+                const li = document.createElement('li');
+                li.className = 'flex items-center space-x-3 bg-white p-3 rounded-lg border border-green-200';
+                li.innerHTML = `
+                    <span class="w-4 h-4 bg-green-500 rounded-full"></span>
+                    <span class="text-gray-800 font-medium">${user.name}</span>
+                `;
+                memberList.appendChild(li);
+            }
+        });
+    }
+
+    function checkMemberCount(users) {
+        const startRaffleBtn = document.getElementById('start_raffle');
+        const raffleWarning = document.getElementById('raffle_warning');
+
+        if (users.length < 3) {
+            startRaffleBtn.disabled = true;
+            startRaffleBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            raffleWarning.classList.remove('hidden');
+
+            // Show warning modal if admin tries to click
+            startRaffleBtn.onclick = () => {
+                showModal({
+                    title: '⚠️ Not Enough Players',
+                    message: 'At least 3 players are required to start the Secret Santa raffle.',
+                    type: 'warning',
+                    buttonText: 'OK'
+                });
+            };
+        } else {
+            startRaffleBtn.disabled = false;
+            startRaffleBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            raffleWarning.classList.add('hidden');
+            startRaffleBtn.onclick = startRaffle;
+        }
+    }
+
+    function startRaffle() {
+        socket.emit("start_raffle", { roomCode: roomCode });
+    }
+
+    function copyRoomCode() {
+        navigator.clipboard.writeText(roomCode).then(() => {
+            showModal({
+                title: '📋 Room Code Copied',
+                message: 'Room code has been copied to your clipboard!',
+                type: 'success',
+                buttonText: 'OK',
+            });
+        }).catch(err => {
+            showModal({
+                title: '❌ Copy Failed',
+                message: 'Failed to copy room code. Please try again.',
+                type: 'error',
+                buttonText: 'OK',
+            });
+        });
+    }
+
+    function showModal(options = {}) {
+        // First, check for and remove any existing modals
+        const existingModal = document.querySelector('.modal-container');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        const {
+            title = '🎄 Secret Santa',
+            message = '',
+            type = 'success',
+            buttonText = 'Got it!',
+            buttonAction = null
+        } = options;
+
+        // Define styles based on type
+        const styles = {
+            success: {
+                bg: 'bg-green-100',
+                text: 'text-green-800',
+                button: 'bg-green-600 hover:bg-green-700',
+                icon: `<svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                       </svg>`
+            },
+            error: {
+                bg: 'bg-red-100',
+                text: 'text-red-800',
+                button: 'bg-red-600 hover:bg-red-700',
+                icon: `<svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                       </svg>`
+            },
+            warning: {
+                bg: 'bg-yellow-100',
+                text: 'text-yellow-800',
+                button: 'bg-yellow-600 hover:bg-yellow-700',
+                icon: `<svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                       </svg>`
+            }
+        };
+
+        const style = styles[type];
+        const modal = document.createElement('div');
+        // Add modal-container class for easy identification
+        modal.className = 'modal-container fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50';
+
+        // Add animation classes
+        modal.innerHTML = `
+            <div class="bg-white rounded-xl p-8 max-w-md w-full shadow-xl transform transition-all duration-300 ease-out scale-95 opacity-0">
+                <div class="flex items-start space-x-4">
+                    ${style.icon}
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">${title}</h3>
+                        <p class="text-gray-700 text-lg mb-6">${message}</p>
+                    </div>
+                </div>
+                <button class="w-full px-4 py-2 text-white rounded-lg transition ${style.button}">
+                    ${buttonText}
+                </button>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Trigger animation after a brief delay
+        setTimeout(() => {
+            const modalContent = modal.querySelector('div');
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+
+        // Handle button click with animation
+        const button = modal.querySelector('button');
+        button.onclick = () => {
+            const modalContent = modal.querySelector('div');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+
+            // Wait for animation to complete before removing
+            setTimeout(() => {
+                modal.remove();
+                if (buttonAction) buttonAction();
+            }, 200);
+        };
+
+        // Add escape key handler
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                button.click();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        // Add click outside handler
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                button.click();
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{
+  "name": "Secret Santa App",
+  "description": "A Flask web application for organizing Secret Santa gift exchanges",
+  "keywords": [
+    "flask",
+    "python",
+    "web",
+    "secret-santa"
+  ],
+  "website": "",
+  "repository": "",
+  "env": {
+    "FLASK_APP": {
+      "description": "Flask application entry point",
+      "value": "secret_santa_app"
+    },
+    "FLASK_ENV": {
+      "description": "Flask environment",
+      "value": "production"
+    },
+    "SECRET_KEY": {
+      "description": "Secret key for Flask sessions",
+      "generator": "secret"
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "Eco"
+    }
+  }
+}

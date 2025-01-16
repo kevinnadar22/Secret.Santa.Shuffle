@@ -1,0 +1,129 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.initial-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.initial-buttons button {
+    padding: 12px 30px;
+    font-size: 16px;
+    min-width: 150px;
+}
+
+.room-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+button {
+    padding: 12px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.back-btn {
+    background: #6c757d;
+}
+
+.back-btn:hover {
+    background: #5a6268;
+}
+
+#room_info {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e1e1e1;
+}
+
+#users_list {
+    list-style: none;
+    padding: 0;
+}
+
+#users_list li {
+    padding: 10px;
+    margin: 5px 0;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e1e1e1;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+#leave_room {
+    background: #dc3545;
+    margin-top: 20px;
+}
+
+#leave_room:hover {
+    background: #c82333;
+}
