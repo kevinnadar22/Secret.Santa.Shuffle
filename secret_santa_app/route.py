@@ -2,8 +2,20 @@ from flask import Blueprint, render_template, current_app, request, redirect, ur
 from .utils import room_id_generator
 from .models import Room, User
 from config import Cache
+from flask_socketio import SocketIO
 
 bp = Blueprint("main", __name__)
+
+# Update SocketIO initialization
+socketio = SocketIO(
+    cors_allowed_origins="*",
+    ping_timeout=60,
+    ping_interval=25,
+    reconnection=True,
+    reconnection_attempts=5,
+    reconnection_delay=1000,
+    reconnection_delay_max=5000
+)
 
 
 @bp.route("/")

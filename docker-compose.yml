@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   web:
@@ -9,6 +9,18 @@ services:
       - SECRET_KEY=your_secret_key
       - FLASK_APP=secret_santa_app
       - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+      - WEB_SOCKET_TIMEOUT=60
     volumes:
       - .:/app
     restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

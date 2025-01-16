@@ -127,7 +127,13 @@
 
 {% block scripts %}
 <script>
-    const socket = io();
+    const socket = io({
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000,
+    });
     const roomCode = "{{room_code}}";
     const name = "{{name}}";
     let isAdmin = false;
@@ -175,6 +181,43 @@
             type: 'error',
             buttonText: 'Go Back',
             buttonAction: () => window.location.href = '/'
+        });
+    });
+
+    // Add connection event handlers
+    socket.on('connect_error', (error) => {
+        console.log('Connection Error:', error);
+        showModal({
+            title: '⚠️ Connection Error',
+            message: 'Having trouble connecting to the server. Attempting to reconnect...',
+            type: 'warning',
+            buttonText: 'OK'
+        });
+    });
+
+    socket.on('disconnect', (reason) => {
+        console.log('Disconnected:', reason);
+        if (reason === 'io server disconnect') {
+            // Server disconnected us, try to reconnect
+            socket.connect();
+        }
+        // Else the socket will automatically try to reconnect
+    });
+
+    socket.on('reconnect', (attemptNumber) => {
+        console.log('Reconnected after', attemptNumber, 'attempts');
+        // Re-join the room after reconnection
+        socket.emit('join_room', { roomCode: roomCode, name: name });
+    });
+
+    socket.on('reconnect_error', (error) => {
+        console.log('Reconnection Error:', error);
+        showModal({
+            title: '❌ Connection Failed',
+            message: 'Unable to reconnect to the server. Please refresh the page.',
+            type: 'error',
+            buttonText: 'Refresh',
+            buttonAction: () => window.location.reload()
         });
     });
 
