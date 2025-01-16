@@ -25,9 +25,9 @@
 
         <div class="form-container">
             <!-- Initial Buttons -->
-            <div id="initial_buttons" class="flex flex-col gap-3 justify-center mb-2">
+            <div id="initial_buttons" class="flex flex-col items-center gap-3 justify-center mb-2">
                 <button id="show_create_form"
-                    class="christmas-button group relative min-w-[200px]">
+                    class="christmas-button group relative w-[260px]">
                     <span class="relative z-2 flex items-center justify-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -37,7 +37,7 @@
                     </span>
                 </button>
                 <button id="show_join_form"
-                    class="christmas-button group relative min-w-[200px]">
+                    class="christmas-button group relative w-[260px]">
                     <span class="relative z-2 flex items-center justify-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,27 +50,27 @@
             </div>
 
             <!-- Forms -->
-            <div class="forms-wrapper w-full max-w-md mx-auto absolute top-0 left-1/2 -translate-x-1/2 opacity-0 pointer-events-none transition-all duration-300">
+            <div class="forms-wrapper w-full max-w-sm mx-auto opacity-0 pointer-events-none transition-all duration-300">
                 <!-- Create Room Form -->
                 <form id="create_room_form" class="space-y-3 w-full" action="/create-room" method="POST">
-                    <div class="christmas-inner-card bg-amber-50 relative p-4">
+                    <div class="christmas-inner-card bg-amber-50 relative p-3 sm:p-4">
                         <div class="corner-decoration top-left-decoration"></div>
                         <div class="corner-decoration top-right-decoration"></div>
-                        <h2 class="christmas-title text-2xl mb-4">Create New Room</h2>
-                        <div class="space-y-4">
+                        <h2 class="christmas-title text-2xl mb-3">Create New Room</h2>
+                        <div class="space-y-3 max-w-[240px] mx-auto">
                             <div class="relative">
                                 <input required type="text" id="create_name" name="name" 
                                     placeholder="Enter your name"
-                                    class="christmas-input w-full">
+                                    class="christmas-input w-full text-base">
                                 <p id="create_name_error" class="hidden text-red-500 text-sm mt-1">
                                     Please enter your name
                                 </p>
                             </div>
-                            <div class="flex flex-col gap-3">
-                                <button type="submit" class="christmas-button w-full">
+                            <div class="flex flex-col gap-2">
+                                <button type="submit" class="christmas-button w-[200px] mx-auto">
                                     Create Room
                                 </button>
-                                <button type="button" class="christmas-button back-btn w-full" 
+                                <button type="button" class="christmas-button back-btn w-[200px] mx-auto" 
                                     style="background: var(--christmas-red)">
                                     Back
                                 </button>
@@ -81,15 +81,15 @@
 
                 <!-- Join Room Form -->
                 <form id="join_room_form" class="space-y-3 w-full" action="/join-room" method="POST">
-                    <div class="christmas-inner-card bg-amber-50 relative p-4">
+                    <div class="christmas-inner-card bg-amber-50 relative p-3 sm:p-4">
                         <div class="corner-decoration top-left-decoration"></div>
                         <div class="corner-decoration top-right-decoration"></div>
-                        <h2 class="christmas-title text-2xl mb-4">Join Existing Room</h2>
-                        <div class="space-y-4">
+                        <h2 class="christmas-title text-2xl mb-3">Join Existing Room</h2>
+                        <div class="space-y-3 max-w-[240px] mx-auto">
                             <div class="relative">
                                 <input required type="text" id="join_name" name="name" 
                                     placeholder="Enter your name"
-                                    class="christmas-input w-full">
+                                    class="christmas-input w-full text-base">
                                 <p id="join_name_error" class="hidden text-red-500 text-sm mt-1">
                                     Please enter your name
                                 </p>
@@ -97,16 +97,16 @@
                             <div class="relative">
                                 <input required type="text" id="room_code" name="room_code" 
                                     placeholder="Enter Room Code"
-                                    class="christmas-input w-full">
+                                    class="christmas-input w-full text-base">
                                 <p id="room_error" class="hidden text-red-500 text-sm mt-1">
                                     Invalid room code
                                 </p>
                             </div>
-                            <div class="flex flex-col gap-3">
-                                <button type="submit" class="christmas-button w-full">
+                            <div class="flex flex-col gap-2">
+                                <button type="submit" class="christmas-button w-[200px] mx-auto">
                                     Join Room
                                 </button>
-                                <button type="button" class="christmas-button back-btn w-full" 
+                                <button type="button" class="christmas-button back-btn w-[200px] mx-auto" 
                                     style="background: var(--christmas-red)">
                                     Back
                                 </button>

@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         initialButtons.style.opacity = '0';
         setTimeout(() => {
             initialButtons.style.display = 'none';
-            formsWrapper.style.position = 'relative';
             formsWrapper.style.opacity = '1';
             formsWrapper.style.pointerEvents = 'auto';
             formToShow.style.display = 'block';
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
         formsWrapper.style.opacity = '0';
         formsWrapper.style.pointerEvents = 'none';
         setTimeout(() => {
-            formsWrapper.style.position = 'absolute';
             initialButtons.style.display = 'flex';
             setTimeout(() => {
                 initialButtons.style.opacity = '1';
