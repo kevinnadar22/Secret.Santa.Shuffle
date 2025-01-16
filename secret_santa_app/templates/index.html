@@ -13,19 +13,19 @@
         <div class="corner-decoration bottom-left-decoration"></div>
         <div class="corner-decoration bottom-right-decoration"></div>
 
-        <h1 class="christmas-title text-4xl font-bold mb-8">
+        <h1 class="christmas-title text-4xl font-bold mb-2">
             Welcome to Secret Santa! 🎅
         </h1>
 
         {% if error %}
-        <div class="bg-red-100 border-2 border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div class="bg-red-100 border-2 border-red-400 text-red-700 px-4 py-3 rounded-lg mb-2">
             <p class="text-center">{{ error }}</p>
         </div>
         {% endif %}
 
         <div class="form-container">
             <!-- Initial Buttons -->
-            <div id="initial_buttons" class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <div id="initial_buttons" class="flex flex-col gap-3 justify-center mb-2">
                 <button id="show_create_form"
                     class="christmas-button group relative min-w-[200px]">
                     <span class="relative z-2 flex items-center justify-center gap-2">
@@ -37,7 +37,7 @@
                     </span>
                 </button>
                 <button id="show_join_form"
-                    class="christmas-button group relative min-w-[200px]" style="background: var(--christmas-green)">
+                    class="christmas-button group relative min-w-[200px]">
                     <span class="relative z-2 flex items-center justify-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,13 +50,13 @@
             </div>
 
             <!-- Forms -->
-            <div class="forms-wrapper">
+            <div class="forms-wrapper w-full max-w-md mx-auto absolute top-0 left-1/2 -translate-x-1/2 opacity-0 pointer-events-none transition-all duration-300">
                 <!-- Create Room Form -->
-                <form id="create_room_form" class="space-y-6 max-w-md mx-auto" action="/create-room" method="POST">
-                    <div class="christmas-inner-card bg-amber-50 relative">
+                <form id="create_room_form" class="space-y-3 w-full" action="/create-room" method="POST">
+                    <div class="christmas-inner-card bg-amber-50 relative p-4">
                         <div class="corner-decoration top-left-decoration"></div>
                         <div class="corner-decoration top-right-decoration"></div>
-                        <h2 class="christmas-title text-2xl mb-6">Create New Room</h2>
+                        <h2 class="christmas-title text-2xl mb-4">Create New Room</h2>
                         <div class="space-y-4">
                             <div class="relative">
                                 <input required type="text" id="create_name" name="name" 
@@ -66,13 +66,13 @@
                                     Please enter your name
                                 </p>
                             </div>
-                            <div class="flex gap-4 justify-end">
-                                <button type="button" class="christmas-button back-btn" 
-                                    style="background: var(--christmas-green)">
-                                    Back
-                                </button>
-                                <button type="submit" class="christmas-button">
+                            <div class="flex flex-col gap-3">
+                                <button type="submit" class="christmas-button w-full">
                                     Create Room
+                                </button>
+                                <button type="button" class="christmas-button back-btn w-full" 
+                                    style="background: var(--christmas-red)">
+                                    Back
                                 </button>
                             </div>
                         </div>
@@ -80,11 +80,11 @@
                 </form>
 
                 <!-- Join Room Form -->
-                <form id="join_room_form" class="space-y-6 max-w-md mx-auto" action="/join-room" method="POST">
-                    <div class="christmas-inner-card bg-amber-50 relative">
+                <form id="join_room_form" class="space-y-3 w-full" action="/join-room" method="POST">
+                    <div class="christmas-inner-card bg-amber-50 relative p-4">
                         <div class="corner-decoration top-left-decoration"></div>
                         <div class="corner-decoration top-right-decoration"></div>
-                        <h2 class="christmas-title text-2xl mb-6">Join Existing Room</h2>
+                        <h2 class="christmas-title text-2xl mb-4">Join Existing Room</h2>
                         <div class="space-y-4">
                             <div class="relative">
                                 <input required type="text" id="join_name" name="name" 
@@ -102,13 +102,13 @@
                                     Invalid room code
                                 </p>
                             </div>
-                            <div class="flex gap-4 justify-end">
-                                <button type="button" class="christmas-button back-btn" 
-                                    style="background: var(--christmas-green)">
-                                    Back
-                                </button>
-                                <button type="submit" class="christmas-button">
+                            <div class="flex flex-col gap-3">
+                                <button type="submit" class="christmas-button w-full">
                                     Join Room
+                                </button>
+                                <button type="button" class="christmas-button back-btn w-full" 
+                                    style="background: var(--christmas-red)">
+                                    Back
                                 </button>
                             </div>
                         </div>
@@ -118,7 +118,7 @@
         </div>
 
         <!-- How It Works Section -->
-        <div class="how-it-works mt-12">
+        <div class="how-it-works mt-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">How It Works</h2>
             <div class="grid md:grid-cols-3 gap-6">
                 <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
@@ -155,5 +155,6 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/form_transitions.js') }}"></script>
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}
