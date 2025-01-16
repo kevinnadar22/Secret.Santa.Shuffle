@@ -50,10 +50,14 @@ def handle_join_room(data):
     
     room = Cache.ROOM_CACHE[room_code]
 
-    # Check if user already exists in room
+    # Check if user already exists in room,
     if user.id in [user.id for user in room.users]:
         emit("room_joined", room.dict(), to=room_code)
         return
+    
+    # check if user exists by same name, return error message
+    if user.name in [user.name for user in room.users]:
+        return emit("error", {"status": "error", "message": "Name already exists in this room, try a different name"})
 
     # If only one user with empty id exists, remove them and set new user as admin
     if len(room.users) == 0 and room.admin.id == "":
