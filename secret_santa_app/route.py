@@ -32,7 +32,7 @@ def join_room():
         context = {"error": "Room not found"}
         return render_template("index.html", **context)
     # if room code is in cache and same name user already exists, return error message
-    if name in [user.name for user in Cache.ROOM_CACHE[room_code].users]:
+    if name != "Guest" and name in [user.name for user in Cache.ROOM_CACHE[room_code].users]:
         context = {"error": "Name already exists in this room, try a different name"}
         return render_template("index.html", **context)
     return redirect(url_for("main.room", room_code=room_code, name=name))
