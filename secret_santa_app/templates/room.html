@@ -17,341 +17,192 @@
         align-items: center;
         z-index: 100;
         opacity: 0;
+    }
+
+    .gift-box {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transform-style: preserve-3d;
         perspective: 1000px;
     }
 
-    .raffle-paper {
-        background: #f8f0e3;
-        background-image:
-            linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
-            linear-gradient(#ddd 1px, transparent 1px);
-        background-size: 100% 28px;
-        width: 320px;
-        height: 0;
-        position: relative;
-        border-radius: 8px;
-        box-shadow: 
-            0 4px 20px rgba(0, 0, 0, 0.2),
-            inset 0 0 30px rgba(0,0,0,0.05);
+    .gift-lid {
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        background: #ff4444;
+        top: -40px;
+        transform-origin: bottom;
+        border-radius: 5px 5px 0 0;
+        box-shadow: inset 0 -4px 0 #cc3333;
+    }
+
+    .gift-box-main {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #ff6666;
+        border-radius: 5px;
+        box-shadow: inset 0 -8px 0 #cc3333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         overflow: hidden;
-        transform-origin: top center;
-        transform-style: preserve-3d;
     }
 
-    .raffle-content {
-        padding: 2rem;
-        text-align: center;
-        opacity: 0;
-        position: relative;
-    }
-
-    .countdown-wrapper {
-        position: relative;
-        height: 150px;
-        width: 150px;
-        margin: 0 auto;
-    }
-
-    .countdown {
-        font-family: 'Caveat', cursive;
-        font-size: 5rem;
-        font-weight: bold;
-        color: #c41e3a;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        position: relative;
-        z-index: 2;
-    }
-
-    .countdown-circle {
+    .gift-ribbon {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 120px;
-        height: 120px;
-        border: 4px solid #c41e3a;
-        border-radius: 50%;
-        opacity: 0.3;
-    }
-
-    .match-name {
-        font-family: 'Caveat', cursive;
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #2d3748;
-        margin-top: 1rem;
-        opacity: 0;
-        line-height: 1.2;
-    }
-
-    .timer {
-        font-size: 0.875rem;
-        color: #666;
-        margin-top: 1rem;
-        opacity: 0;
-    }
-
-    .paper-fold {
-        position: absolute;
-        background: #f8f0e3;
-        opacity: 0;
-        transform-origin: top center;
-    }
-
-    .paper-fold-top {
-        top: 0;
-        left: 0;
-        width: 100%;
+        width: 40px;
         height: 100%;
-        background: linear-gradient(180deg, #e2d5c3 0%, #f8f0e3 100%);
-    }
-
-    .paper-fold-right {
-        background: linear-gradient(90deg, #f8f0e3 0%, #e2d5c3 100%);
-        transform-origin: right center;
-    }
-
-    .paper-fold-left {
-        background: linear-gradient(270deg, #f8f0e3 0%, #e2d5c3 100%);
-        transform-origin: left center;
-    }
-
-    .snowflakes {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .snowflake {
-        position: absolute;
-        color: #fff;
-        font-size: 1.5em;
-        opacity: 0;
-    }
-
-    .countdown-container {
-        position: relative;
-        height: 200px;
-        width: 200px;
-        margin: 0 auto;
-    }
-
-    .santa-counter {
-        position: absolute;
-        width: 120px;
-        height: 120px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%) rotate(180deg);
-        z-index: 1;
-    }
-
-    .santa-body {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #c41e3a;
-        border-radius: 50%;
-        overflow: hidden;
-        box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2);
-    }
-
-    .santa-face {
-        position: absolute;
-        bottom: 25%;
+        background: #ffdd44;
         left: 50%;
         transform: translateX(-50%);
-        width: 65%;
-        height: 45%;
-        background: #ffe4c4;
-        border-radius: 40% 40% 60% 60%;
-        box-shadow: inset 0 -4px 8px rgba(0,0,0,0.1);
     }
 
-    .santa-beard {
-        position: absolute;
-        bottom: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        height: 40%;
-        background: #fff;
-        border-radius: 30% 30% 40% 40%;
-        box-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .santa-hat {
-        position: absolute;
-        top: -20%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 70%;
-        height: 60%;
-        background: #c41e3a;
-        border-radius: 50% 50% 0 0;
-        box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2);
-    }
-
-    .santa-hat:after {
+    .gift-ribbon::after {
         content: '';
         position: absolute;
-        top: -15px;
-        right: -10px;
+        width: 100%;
+        height: 40px;
+        background: #ffdd44;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%) rotate(90deg);
+    }
+
+    .gift-bow {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .bow-left, .bow-right {
+        position: absolute;
         width: 30px;
         height: 30px;
-        background: #fff;
-        border-radius: 50%;
-        box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1);
+        background: #ffdd44;
+        border-radius: 50% 50% 0 50%;
+    }
+
+    .bow-right {
+        right: 0;
+        transform: scaleX(-1);
     }
 
     .countdown {
         font-family: 'Caveat', cursive;
-        font-size: 4rem;
+        font-size: 8rem;
         font-weight: bold;
         color: #fff;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(180deg);
-        z-index: 3;
-    }
-
-    .countdown-ring {
+        text-shadow: 
+            0 0 20px rgba(255,255,255,0.8),
+            0 0 30px rgba(255,255,255,0.5),
+            0 0 40px rgba(255,255,255,0.3);
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 150px;
-        height: 150px;
-        border: 4px solid #fff;
-        border-radius: 50%;
-        opacity: 0.3;
-    }
-
-    .countdown-sparkle {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-
-    .sparkle {
-        position: absolute;
-        background: #fff;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
+        z-index: 2;
         opacity: 0;
     }
 
-    .santa-pants {
+    .match-card {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 45%;
-        background: #800000;
-        border-radius: 0 0 50% 50%;
-        box-shadow: inset 0 -5px 15px rgba(0,0,0,0.2);
-    }
-
-    .santa-bottom {
-        position: absolute;
-        bottom: 30%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 85%;
-        height: 45%;
-        background: #c41e3a;
-        border-radius: 60% 60% 70% 70%;
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 20px;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
         box-shadow: 
-            inset 0 -4px 8px rgba(0,0,0,0.2),
-            inset 0 4px 8px rgba(255,255,255,0.2);
-    }
-
-    .santa-bottom:before,
-    .santa-bottom:after {
-        content: '';
-        position: absolute;
-        width: 45%;
-        height: 60%;
-        background: #b01b35;
-        border-radius: 50%;
-        top: 20%;
-    }
-
-    .santa-bottom:before {
-        left: 0;
-        transform: rotate(-5deg);
-    }
-
-    .santa-bottom:after {
-        right: 0;
-        transform: rotate(5deg);
-    }
-
-    .santa-belt {
-        position: absolute;
-        bottom: 42%;
-        left: 0;
-        width: 100%;
-        height: 8%;
-        background: #4a0404;
-        z-index: 2;
-    }
-
-    .santa-belt:after {
-        content: '';
-        position: absolute;
+            0 10px 30px rgba(0,0,0,0.2),
+            0 0 0 1px rgba(255,255,255,0.1);
+        top: 40%;
         left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 15px;
-        height: 15px;
-        background: #ffd700;
-        border-radius: 3px;
-        box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+        transform: translate(-50%, -50%) scale(0.8);
+        min-width: 320px;
     }
 
-    .santa-shine {
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        opacity: 0;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .floating {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .timer-wrapper {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        margin: 1.5rem auto 0;
+    }
+
+    .timer-circle {
         position: absolute;
         width: 100%;
         height: 100%;
-        background: 
-            radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 60%),
-            radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 40%);
         border-radius: 50%;
-        pointer-events: none;
+        border: 4px solid #eee;
     }
 
-    .santa-bounce {
-        animation: santaBounce 0.5s ease-in-out;
+    .timer-circle-fill {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid #ff4444;
+        transform: rotate(-90deg);
+        transform-origin: center;
     }
 
-    @keyframes santaBounce {
-        0% { 
-            transform: translate(-50%, -50%) rotate(180deg) scale(1);
-        }
-        50% { 
-            transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
-            border-radius: 45% 45% 50% 50%;
-        }
-        100% { 
-            transform: translate(-50%, -50%) rotate(180deg) scale(1);
-        }
+    .timer-number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff4444;
+        font-family: 'Caveat', cursive;
     }
 
-    @keyframes santaJiggle {
-        0%, 100% { transform: rotate(180deg); }
-        25% { transform: rotate(178deg); }
-        75% { transform: rotate(182deg); }
+    .match-card-content {
+        margin-bottom: 1rem;
     }
 
-    .santa-counter:hover {
-        animation: santaJiggle 0.5s ease-in-out infinite;
+    .christmas-note {
+        font-family: 'Caveat', cursive;
+        color: #666;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        line-height: 1.4;
+        padding-top: 1rem;
+        border-top: 2px dashed #eee;
+    }
+
+    .click-hint {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #999;
+        opacity: 0;
+        transform: translateY(10px);
     }
 </style>
 {% endblock %}
@@ -909,184 +760,229 @@
     });
 
     function showRaffleAnimation(matchName) {
-        // Create overlay with snowflakes
         const overlay = document.createElement('div');
         overlay.className = 'raffle-overlay';
         overlay.innerHTML = `
-            <div class="snowflakes">
-                ${Array(20).fill().map(() => '<div class="snowflake">❅</div>').join('')}
-            </div>
-            <div class="raffle-paper">
-                <div class="paper-fold paper-fold-top"></div>
-                <div class="paper-fold paper-fold-bottom"></div>
-                <div class="raffle-content">
-                    <div class="countdown-container">
-                        <div class="countdown-ring"></div>
-                        <div class="santa-counter">
-                            <div class="santa-body">
-                                <div class="santa-bottom"></div>
-                                <div class="santa-belt"></div>
-                                <div class="santa-pants"></div>
-                                <div class="santa-shine"></div>
-                            </div>
-                            <div class="countdown"></div>
+            <div class="gift-box">
+                <div class="gift-bow">
+                    <div class="bow-left"></div>
+                    <div class="bow-right"></div>
+                </div>
+                <div class="gift-lid"></div>
+                <div class="gift-box-main">
+                    <div class="gift-ribbon"></div>
+                    <div class="countdown"></div>
+                </div>
+                <div class="match-card">
+                    <div class="match-card-content">
+                        <h2 class="text-3xl font-bold mb-4">🎄 Your Secret Santa Match 🎄</h2>
+                        <p class="text-4xl font-bold text-red-600">${matchName}</p>
+                        <div class="christmas-note">
+                            Dear Secret Santa,<br>
+                            May your giving be merry and bright! 🎄<br>
+                            Remember, it's not about the price,<br>
+                            but the thought that makes it nice! ✨
                         </div>
                     </div>
-                    <div class="match-name">
-                        Your Secret Santa Match:<br>
-                        ✨ ${matchName} ✨
+                    <div class="timer-wrapper">
+                        <div class="timer-circle"></div>
+                        <div class="timer-circle-fill"></div>
+                        <div class="timer-number">10</div>
                     </div>
-                    <div class="timer">Closing in 10s...</div>
+                    <div class="click-hint">Click anywhere to close</div>
                 </div>
             </div>
         `;
         document.body.appendChild(overlay);
 
-        // Animate snowflakes
-        gsap.to('.snowflake', {
-            opacity: 0.8,
-            duration: 0.5,
-            stagger: 0.1,
-            y: "random(-20, 20)",
-            x: "random(-20, 20)",
-            rotation: "random(-45, 45)"
-        });
+        // Create confetti
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.background = ['#ff4444', '#ffdd44', '#44ff44', '#4444ff'][Math.floor(Math.random() * 4)];
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = -20 + 'px';
+            overlay.appendChild(confetti);
+        }
 
-        // Animation timeline
         const tl = gsap.timeline();
 
+        // Initial fade in
         tl.to(overlay, { opacity: 1, duration: 0.5 })
-            // Initial paper appearance
-            .to('.raffle-paper', {
-                height: 450,
-                duration: 1,
-                ease: 'power2.inOut'
-            })
-            // Unfold from top and bottom
-            .to('.paper-fold-top', {
-                opacity: 1,
-                rotationX: -180,
-                duration: 1,
-                ease: 'power2.inOut'
-            }, '-=0.5')
-            .to('.paper-fold-bottom', {
-                opacity: 1,
-                rotationX: 180,
-                duration: 1,
-                ease: 'power2.inOut'
-            }, '-=0.8')
-            .to('.raffle-content', { 
-                opacity: 1, 
-                duration: 0.5,
-                y: [20, 0],
-                ease: 'back.out(1.2)'
-            });
+          .to('.gift-box', { scale: 1.2, duration: 1, ease: 'elastic.out(1, 0.5)' });
 
-        // Updated countdown animation
+        // Countdown animation
         let count = 3;
         const countEl = overlay.querySelector('.countdown');
-        countEl.style.opacity = 0;
 
         function showNumber() {
             if (count > 0) {
-                // Reset animations
-                gsap.set(countEl, { opacity: 0, scale: 2 });
-                gsap.set('.sparkle', { opacity: 0, scale: 0 });
-
-                // Show number with effects
+                // Prepare the number
                 countEl.textContent = count;
-                gsap.to(countEl, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.5,
-                    ease: 'back.out(1.7)'
-                });
-
-                // Santa bounce effect
-                const santa = document.querySelector('.santa-counter');
-                santa.classList.remove('santa-bounce');
-                void santa.offsetWidth; // Trigger reflow
-                santa.classList.add('santa-bounce');
-
-                // Add wiggle effect
-                gsap.to('.santa-counter', {
-                    keyframes: [
-                        { 
-                            scaleY: 0.9, 
-                            scaleX: 1.1, 
-                            duration: 0.15 
-                        },
-                        { 
-                            scaleY: 1.1, 
-                            scaleX: 0.9, 
-                            duration: 0.15 
-                        },
-                        { 
-                            scaleY: 1, 
-                            scaleX: 1, 
-                            duration: 0.2 
-                        }
-                    ],
-                    ease: "power1.inOut"
-                });
-
-                // Add wiggle effect
-                gsap.to('.santa-bottom', {
-                    rotation: [-5, 5, 0],
-                    duration: 0.5,
-                    ease: 'power1.inOut'
-                });
+                
+                // Complex animation sequence
+                gsap.timeline()
+                    .to(countEl, {
+                        opacity: 1,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    })
+                    .from(countEl, {
+                        scale: 2,
+                        duration: 0.6,
+                        ease: 'elastic.out(1, 0.5)',
+                    }, '-=0.3')
+                    // Fancy gift box animation
+                    .to('.gift-box', {
+                        keyframes: [
+                            { rotation: -3, duration: 0.1 },
+                            { rotation: 3, duration: 0.1 },
+                            { rotation: -2, duration: 0.1 },
+                            { rotation: 2, duration: 0.1 },
+                            { rotation: 0, duration: 0.1 }
+                        ],
+                        ease: 'none'
+                    }, '-=0.4')
+                    // Fade out
+                    .to(countEl, {
+                        opacity: 0,
+                        scale: 0.5,
+                        duration: 0.3,
+                        ease: 'power2.in',
+                        delay: 0.2
+                    });
 
                 count--;
                 setTimeout(showNumber, 1000);
             } else {
-                // Hide countdown, show name
-                gsap.to('.countdown-container', {
-                    opacity: 0,
-                    scale: 0,
-                    duration: 0.5,
-                    onComplete: () => {
-                        gsap.to('.match-name', {
-                            opacity: 1,
-                            scale: [0.8, 1],
-                            rotation: [-5, 0],
-                            duration: 1,
-                            ease: 'elastic.out(1, 0.3)'
-                        });
-                        gsap.to('.timer', { opacity: 1, duration: 0.5 });
+                // Enhanced gift opening animation
+                const openingTl = gsap.timeline();
 
-                        // Start 10 second countdown
-                        let timeLeft = 10;
-                        const timer = setInterval(() => {
-                            timeLeft--;
-                            overlay.querySelector('.timer').textContent = `Closing in ${timeLeft}s...`;
-                            if (timeLeft <= 0) {
-                                clearInterval(timer);
-                                gsap.to(overlay, {
+                openingTl
+                    .to('.gift-lid', {
+                        rotationX: -180,
+                        duration: 1.2,
+                        ease: 'power4.inOut'
+                    })
+                    .to('.gift-bow', {
+                        y: -30,
+                        opacity: 0,
+                        duration: 0.6,
+                        ease: 'power2.in'
+                    }, '-=1')
+                    .to('.countdown', {
+                        opacity: 0,
+                        scale: 0,
+                        duration: 0.3,
+                        ease: 'power2.in'
+                    }, '-=0.8')
+                    // Enhanced match card reveal
+                    .to('.match-card', {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        duration: 1.2,
+                        ease: 'elastic.out(1, 0.5)',
+                        onComplete: () => {
+                            // Show click hint with animation
+                            gsap.to('.click-hint', {
+                                opacity: 1,
+                                y: 0,
+                                duration: 0.5,
+                                delay: 0.5
+                            });
+
+                            // Smooth timer countdown
+                            let timeLeft = 10;
+                            const timerNumber = overlay.querySelector('.timer-number');
+                            const timerFill = overlay.querySelector('.timer-circle-fill');
+                            
+                            // Smooth circle rotation
+                            gsap.to(timerFill, {
+                                rotation: 270,
+                                duration: 10,
+                                ease: 'none'
+                            });
+
+                            // Smooth number countdown
+                            const countdownTl = gsap.timeline();
+                            for(let i = 10; i >= 0; i--) {
+                                countdownTl.to(timerNumber, {
+                                    duration: 0.1,
                                     opacity: 0,
-                                    duration: 0.5,
-                                    onComplete: () => overlay.remove()
-                                });
+                                    scale: 0.8,
+                                    onComplete: () => {
+                                        timerNumber.textContent = i;
+                                    }
+                                })
+                                .to(timerNumber, {
+                                    duration: 0.2,
+                                    opacity: 1,
+                                    scale: 1,
+                                    ease: 'back.out'
+                                })
+                                .to({}, { duration: 0.7 }); // Wait for the rest of the second
                             }
-                        }, 1000);
-                    }
+
+                            // Enhanced closing animation
+                            countdownTl.to('.match-card', {
+                                scale: 0.8,
+                                opacity: 0,
+                                duration: 0.5,
+                                ease: 'power2.in'
+                            })
+                            .to(overlay, {
+                                opacity: 0,
+                                duration: 0.5,
+                                onComplete: () => overlay.remove()
+                            });
+                        }
+                    });
+
+                // Enhanced confetti animation
+                gsap.to('.confetti', {
+                    opacity: 1,
+                    y: '100vh',
+                    rotation: 'random(-720, 720)',
+                    x: 'random(-200, 200)',
+                    duration: 'random(2, 4)',
+                    stagger: {
+                        amount: 2,
+                        from: 'random'
+                    },
+                    ease: 'power1.out'
+                });
+
+                // Smooth floating animation
+                gsap.to('.gift-box', {
+                    y: '-=30',
+                    duration: 2,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'power1.inOut'
                 });
             }
         }
 
-        // Start countdown after paper unfolds
-        tl.add(() => setTimeout(showNumber, 500));
+        // Start countdown
+        setTimeout(showNumber, 500);
 
-        // Animate snowflakes continuously
-        gsap.to('.snowflake', {
-            y: '+=30',
-            x: '+=10',
-            rotation: '+=45',
-            duration: 2,
-            stagger: 0.1,
-            repeat: -1,
-            yoyo: true,
-            ease: 'none'
+        // Add click handler to close overlay
+        overlay.addEventListener('click', (event) => {
+            // Only close if clicking outside the match card
+            if (!event.target.closest('.match-card')) {
+                gsap.to('.match-card', {
+                    scale: 0.8,
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: 'power2.in'
+                });
+                gsap.to(overlay, {
+                    opacity: 0,
+                    duration: 0.3,
+                    onComplete: () => overlay.remove()
+                });
+            }
         });
     }
 </script>
