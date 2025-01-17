@@ -1,0 +1,198 @@
+
+    .raffle-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        opacity: 0;
+    }
+
+    .gift-box {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+
+    .gift-lid {
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        background: #ff4444;
+        top: -40px;
+        transform-origin: bottom;
+        border-radius: 5px 5px 0 0;
+        box-shadow: inset 0 -4px 0 #cc3333;
+    }
+
+    .gift-box-main {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #ff6666;
+        border-radius: 5px;
+        box-shadow: inset 0 -8px 0 #cc3333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .gift-ribbon {
+        position: absolute;
+        width: 40px;
+        height: 100%;
+        background: #ffdd44;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .gift-ribbon::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        background: #ffdd44;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%) rotate(90deg);
+    }
+
+    .gift-bow {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .bow-left, .bow-right {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background: #ffdd44;
+        border-radius: 50% 50% 0 50%;
+    }
+
+    .bow-right {
+        right: 0;
+        transform: scaleX(-1);
+    }
+
+    .countdown {
+        font-family: 'Caveat', cursive;
+        font-size: 8rem;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 
+            0 0 20px rgba(255,255,255,0.8),
+            0 0 30px rgba(255,255,255,0.5),
+            0 0 40px rgba(255,255,255,0.3);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        opacity: 0;
+    }
+
+    .match-card {
+        position: absolute;
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 20px;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+        box-shadow: 
+            0 10px 30px rgba(0,0,0,0.2),
+            0 0 0 1px rgba(255,255,255,0.1);
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        min-width: 320px;
+    }
+
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        opacity: 0;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .floating {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .timer-wrapper {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        margin: 1.5rem auto 0;
+    }
+
+    .timer-circle {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid #eee;
+    }
+
+    .timer-circle-fill {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid #ff4444;
+        transform: rotate(-90deg);
+        transform-origin: center;
+    }
+
+    .timer-number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff4444;
+        font-family: 'Caveat', cursive;
+    }
+
+    .match-card-content {
+        margin-bottom: 1rem;
+    }
+
+    .christmas-note {
+        font-family: 'Caveat', cursive;
+        color: #666;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        line-height: 1.4;
+        padding-top: 1rem;
+        border-top: 2px dashed #eee;
+    }
+
+    .click-hint {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #999;
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
