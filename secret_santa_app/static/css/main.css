@@ -216,7 +216,7 @@ footer a:hover {
 .decoration-holly {
     top: -20px;
     right: -20px;
-    background-image: url('/static/images/holly.png');
+    background-image: url('/static/images/bell.png');
 }
 
 .decoration-bell {
@@ -310,7 +310,7 @@ footer a:hover {
 .top-left-decoration {
     top: -25px;
     left: -25px;
-    background-image: url('/static/images/holly.png');
+    background-image: url('/static/images/bell.png');
     transform: rotate(-45deg);
 }
 

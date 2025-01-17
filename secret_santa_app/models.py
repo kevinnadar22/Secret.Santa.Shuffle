@@ -27,7 +27,10 @@ class User(BaseModel):
         return {
             'id': self.id,
             'name': self.name,
-            'secret_santa': self.secret_santa.to_dict() if self.secret_santa else None
+            'secret_santa': {
+                'id': self.secret_santa.id,
+                'name': self.secret_santa.name
+            } if self.secret_santa else None
         }
 
 

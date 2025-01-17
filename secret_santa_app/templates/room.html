@@ -4,6 +4,356 @@
 
 {% block extra_head %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- Add handwritten font -->
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .raffle-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        opacity: 0;
+        perspective: 1000px;
+    }
+
+    .raffle-paper {
+        background: #f8f0e3;
+        background-image:
+            linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+            linear-gradient(#ddd 1px, transparent 1px);
+        background-size: 100% 28px;
+        width: 320px;
+        height: 0;
+        position: relative;
+        border-radius: 8px;
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.2),
+            inset 0 0 30px rgba(0,0,0,0.05);
+        overflow: hidden;
+        transform-origin: top center;
+        transform-style: preserve-3d;
+    }
+
+    .raffle-content {
+        padding: 2rem;
+        text-align: center;
+        opacity: 0;
+        position: relative;
+    }
+
+    .countdown-wrapper {
+        position: relative;
+        height: 150px;
+        width: 150px;
+        margin: 0 auto;
+    }
+
+    .countdown {
+        font-family: 'Caveat', cursive;
+        font-size: 5rem;
+        font-weight: bold;
+        color: #c41e3a;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+    .countdown-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 120px;
+        border: 4px solid #c41e3a;
+        border-radius: 50%;
+        opacity: 0.3;
+    }
+
+    .match-name {
+        font-family: 'Caveat', cursive;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #2d3748;
+        margin-top: 1rem;
+        opacity: 0;
+        line-height: 1.2;
+    }
+
+    .timer {
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 1rem;
+        opacity: 0;
+    }
+
+    .paper-fold {
+        position: absolute;
+        background: #f8f0e3;
+        opacity: 0;
+        transform-origin: top center;
+    }
+
+    .paper-fold-top {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, #e2d5c3 0%, #f8f0e3 100%);
+    }
+
+    .paper-fold-right {
+        background: linear-gradient(90deg, #f8f0e3 0%, #e2d5c3 100%);
+        transform-origin: right center;
+    }
+
+    .paper-fold-left {
+        background: linear-gradient(270deg, #f8f0e3 0%, #e2d5c3 100%);
+        transform-origin: left center;
+    }
+
+    .snowflakes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .snowflake {
+        position: absolute;
+        color: #fff;
+        font-size: 1.5em;
+        opacity: 0;
+    }
+
+    .countdown-container {
+        position: relative;
+        height: 200px;
+        width: 200px;
+        margin: 0 auto;
+    }
+
+    .santa-counter {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(180deg);
+        z-index: 1;
+    }
+
+    .santa-body {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #c41e3a;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2);
+    }
+
+    .santa-face {
+        position: absolute;
+        bottom: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 65%;
+        height: 45%;
+        background: #ffe4c4;
+        border-radius: 40% 40% 60% 60%;
+        box-shadow: inset 0 -4px 8px rgba(0,0,0,0.1);
+    }
+
+    .santa-beard {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 40%;
+        background: #fff;
+        border-radius: 30% 30% 40% 40%;
+        box-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .santa-hat {
+        position: absolute;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70%;
+        height: 60%;
+        background: #c41e3a;
+        border-radius: 50% 50% 0 0;
+        box-shadow: inset -4px -4px 8px rgba(0,0,0,0.2);
+    }
+
+    .santa-hat:after {
+        content: '';
+        position: absolute;
+        top: -15px;
+        right: -10px;
+        width: 30px;
+        height: 30px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1);
+    }
+
+    .countdown {
+        font-family: 'Caveat', cursive;
+        font-size: 4rem;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(180deg);
+        z-index: 3;
+    }
+
+    .countdown-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        height: 150px;
+        border: 4px solid #fff;
+        border-radius: 50%;
+        opacity: 0.3;
+    }
+
+    .countdown-sparkle {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .sparkle {
+        position: absolute;
+        background: #fff;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        opacity: 0;
+    }
+
+    .santa-pants {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 45%;
+        background: #800000;
+        border-radius: 0 0 50% 50%;
+        box-shadow: inset 0 -5px 15px rgba(0,0,0,0.2);
+    }
+
+    .santa-bottom {
+        position: absolute;
+        bottom: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 85%;
+        height: 45%;
+        background: #c41e3a;
+        border-radius: 60% 60% 70% 70%;
+        box-shadow: 
+            inset 0 -4px 8px rgba(0,0,0,0.2),
+            inset 0 4px 8px rgba(255,255,255,0.2);
+    }
+
+    .santa-bottom:before,
+    .santa-bottom:after {
+        content: '';
+        position: absolute;
+        width: 45%;
+        height: 60%;
+        background: #b01b35;
+        border-radius: 50%;
+        top: 20%;
+    }
+
+    .santa-bottom:before {
+        left: 0;
+        transform: rotate(-5deg);
+    }
+
+    .santa-bottom:after {
+        right: 0;
+        transform: rotate(5deg);
+    }
+
+    .santa-belt {
+        position: absolute;
+        bottom: 42%;
+        left: 0;
+        width: 100%;
+        height: 8%;
+        background: #4a0404;
+        z-index: 2;
+    }
+
+    .santa-belt:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 15px;
+        height: 15px;
+        background: #ffd700;
+        border-radius: 3px;
+        box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+    }
+
+    .santa-shine {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 60%),
+            radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 40%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .santa-bounce {
+        animation: santaBounce 0.5s ease-in-out;
+    }
+
+    @keyframes santaBounce {
+        0% { 
+            transform: translate(-50%, -50%) rotate(180deg) scale(1);
+        }
+        50% { 
+            transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
+            border-radius: 45% 45% 50% 50%;
+        }
+        100% { 
+            transform: translate(-50%, -50%) rotate(180deg) scale(1);
+        }
+    }
+
+    @keyframes santaJiggle {
+        0%, 100% { transform: rotate(180deg); }
+        25% { transform: rotate(178deg); }
+        75% { transform: rotate(182deg); }
+    }
+
+    .santa-counter:hover {
+        animation: santaJiggle 0.5s ease-in-out infinite;
+    }
+</style>
 {% endblock %}
 
 {% block header_buttons %}
@@ -31,15 +381,15 @@
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
             <div class="text-center sm:text-left">
                 <h1 class="christmas-title text-4xl font-bold">
-                    Room: {{room_code}}
+                    Squad: {{room_code}}
                 </h1>
-                <p class="text-gray-600 mt-2">Share this code with your friends to join!</p>
+                <p class="text-gray-600 mt-2">Drop this code to your homies! 🔥</p>
             </div>
             <div class="flex space-x-2">
-                <button id="share_button" onclick="shareRoom()" title="Share Room"
+                <button id="share_button" onclick="shareRoom()" title="Share Squad"
                     class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
                         </path>
                     </svg>
@@ -47,7 +397,7 @@
                 <button id="copy_button" onclick="copyRoomLink()" title="Copy Link"
                     class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
                         </path>
                     </svg>
@@ -56,30 +406,22 @@
         </div>
 
         <!-- Participants Section with Christmas styling -->
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Admin Section -->
-            <div class="christmas-inner-card bg-amber-50 relative">
-                <div class="corner-decoration top-left-decoration"></div>
-                <div class="corner-decoration top-right-decoration"></div>
-                <h2 class="christmas-title text-2xl font-bold mb-4">
-                    Admin
-                </h2>
-                <div id="admin_info" class="mt-4">
-                    <!-- Admin info will be populated by JavaScript -->
-                </div>
+        <div class="christmas-inner-card bg-amber-50 relative">
+            <div class="corner-decoration top-left-decoration"></div>
+            <div class="corner-decoration top-right-decoration"></div>
+            <h2 class="christmas-title text-2xl font-bold mb-4">
+                The Squad
+            </h2>
+
+            <!-- Admin info -->
+            <div id="admin_info" class="mb-4">
+                <!-- Admin info will be populated by JavaScript -->
             </div>
 
-            <!-- Members Section -->
-            <div class="christmas-inner-card bg-amber-50 relative">
-                <div class="corner-decoration top-left-decoration"></div>
-                <div class="corner-decoration top-right-decoration"></div>
-                <h2 class="christmas-title text-2xl font-bold mb-4">
-                    Members
-                </h2>
-                <ul id="member_list" class="space-y-3">
-                    <!-- Members list will be populated by JavaScript -->
-                </ul>
-            </div>
+            <!-- Members list -->
+            <ul id="member_list" class="space-y-3">
+                <!-- Members list will be populated by JavaScript -->
+            </ul>
         </div>
 
         <!-- Admin Controls -->
@@ -90,43 +432,46 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                Start Secret Santa Raffle
+                Begin Secret Santa Exchange
             </button>
             <p id="raffle_warning" class="hidden text-red-500 mt-3 text-center font-medium">
-                ⚠️ At least 3 members required to start the raffle
+                ⚠️ Need more homies to start the vibe (at least 3)
             </p>
         </div>
     </div>
 
     <!-- Rules Card -->
-    <div class="how-it-works mt-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">How It Works</h2>
+    <div class="how-it-works mt-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">How We Roll</h2>
         <div class="grid md:grid-cols-3 gap-6">
             <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
                 <div class="flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mb-4 border-2 border-amber-200">
+                    <div
+                        class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mb-4 border-2 border-amber-200">
                         <span class="text-amber-600 text-xl font-bold">1</span>
                     </div>
-                    <h3 class="font-semibold mb-2">Join Room</h3>
-                    <p class="text-gray-600">Share the room code with your friends to join the Secret Santa group</p>
+                    <h3 class="font-semibold mb-2">Link Up</h3>
+                    <p class="text-gray-600">Drop the squad code to your homies and get the party started!</p>
                 </div>
             </div>
             <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
                 <div class="flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4 border-2 border-green-200">
+                    <div
+                        class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4 border-2 border-green-200">
                         <span class="text-green-600 text-xl font-bold">2</span>
                     </div>
-                    <h3 class="font-semibold mb-2">Wait for Others</h3>
-                    <p class="text-gray-600">Share the room code with friends and wait for everyone to join</p>
+                    <h3 class="font-semibold mb-2">Squad Up</h3>
+                    <p class="text-gray-600">Wait for your crew to join the vibe</p>
                 </div>
             </div>
             <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
                 <div class="flex flex-col items-center text-center">
-                    <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-4 border-2 border-purple-200">
+                    <div
+                        class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-4 border-2 border-purple-200">
                         <span class="text-purple-600 text-xl font-bold">3</span>
                     </div>
                     <h3 class="font-semibold mb-2">Get Matched</h3>
-                    <p class="text-gray-600">Once everyone's ready, start the raffle to get your Secret Santa match!</p>
+                    <p class="text-gray-600">Once the squad's ready, find out who you're blessing with gifts!</p>
                 </div>
             </div>
         </div>
@@ -164,12 +509,7 @@
     socket.on("raffle_started", (data) => {
         const user = data.users.find(user => user.id === socket.id);
         if (user && user.secret_santa) {
-            showModal({
-                title: '🎄 Your Secret Santa Match!',
-                message: `You will be the Secret Santa for: ${user.secret_santa.name}`,
-                type: 'success',
-                buttonText: 'Awesome!'
-            });
+            showRaffleAnimation(user.secret_santa.name);
         }
     });
 
@@ -234,9 +574,9 @@
         const adminInfo = document.getElementById('admin_info');
         adminInfo.innerHTML = `
             <div class="flex items-center space-x-3 bg-amber-100 p-3 rounded-lg border border-amber-200">
-                <span class="w-4 h-4 bg-amber-500 rounded-full"></span>
+                <span class="w-4 h-4 bg-green-500 rounded-full"></span>
                 <span class="text-amber-800 font-medium">${admin.name}</span>
-                <span class="text-sm text-amber-600 font-semibold">(Admin)</span>
+                <span class="text-sm text-amber-600 font-semibold">(Big Brain)</span>
             </div>
         `;
 
@@ -279,10 +619,10 @@
             // Show warning modal if admin tries to click
             startRaffleBtn.onclick = () => {
                 showModal({
-                    title: '⚠️ Not Enough Players',
-                    message: 'At least 3 players are required to start the Secret Santa raffle.',
+                    title: '⚠️ Not Enough Homies',
+                    message: 'Fr fr, we need at least 3 people to start this thing!',
                     type: 'warning',
-                    buttonText: 'OK'
+                    buttonText: 'Got it!'
                 });
             };
         } else {
@@ -427,7 +767,7 @@
 
     function shareRoom() {
         const shareUrl = `${window.location.origin}/room/${roomCode}`;
-        
+
         if (navigator.share) {
             navigator.share({
                 title: 'Join Secret Santa!',
@@ -445,7 +785,7 @@
 
     function copyRoomLink() {
         const shareUrl = `${window.location.origin}/room/${roomCode}`;
-        
+
         if (navigator.clipboard && window.isSecureContext) {
             navigator.clipboard.writeText(shareUrl)
                 .then(() => {
@@ -476,17 +816,17 @@
 
     function showSuccessCopyModal() {
         showModal({
-            title: '📋 Copied!',
-            message: 'Link has been copied to your clipboard',
+            title: '📋 Squad Code Copied',
+            message: 'Code\'s locked and loaded in your clipboard! 🔥',
             type: 'success',
-            buttonText: 'OK',
+            buttonText: 'Bet!',
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const urlParams = new URLSearchParams(window.location.search);
         const nameParam = urlParams.get('name');
-        
+
         if (!nameParam) {
             showNamePromptModal();
         }
@@ -495,14 +835,14 @@
     function showNamePromptModal() {
         const modalContent = `
             <div class="bg-amber-50 rounded-xl p-8 max-w-md w-full shadow-xl border border-amber-200">
-                <h3 class="text-2xl font-bold text-amber-800 mb-4">Enter Your Name</h3>
+                <h3 class="text-2xl font-bold text-amber-800 mb-4">Drop Your Name Below</h3>
                 <input type="text" id="name_input" 
                     class="w-full px-4 py-2 border border-amber-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-amber-100 text-amber-800 placeholder-amber-500"
-                    placeholder="Your name"
+                    placeholder="What should we call you?"
                     maxlength="30">
                 <button onclick="submitName()" 
                     class="w-full px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition">
-                    Join Room
+                    Let's Get It!
                 </button>
             </div>
         `;
@@ -517,7 +857,7 @@
         input.focus();
 
         // Handle enter key
-        input.addEventListener('keypress', function(e) {
+        input.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 submitName();
             }
@@ -527,7 +867,7 @@
     function submitName() {
         const nameInput = document.getElementById('name_input');
         const name = nameInput.value.trim();
-        
+
         if (name) {
             const currentUrl = new URL(window.location.href);
             currentUrl.searchParams.set('name', name);
@@ -540,14 +880,14 @@
 
     function kickUser(userId) {
         showModal({
-            title: '⚠️ Kick User',
-            message: 'Are you sure you want to kick this user?',
+            title: '⚠️ Kick Vibes',
+            message: 'Fr fr, you wanna kick this homie?',
             type: 'warning',
-            buttonText: 'Yes, Kick User',
+            buttonText: 'Yeah, They Gotta Go',
             buttonAction: () => {
-                socket.emit('kick_user', { 
+                socket.emit('kick_user', {
                     roomCode: roomCode,
-                    userId: userId 
+                    userId: userId
                 });
             }
         });
@@ -556,10 +896,10 @@
     socket.on('user_kicked', (data) => {
         if (data.kickedUserId === socket.id) {
             showModal({
-                title: '❌ Kicked',
-                message: 'You have been kicked from the room by the admin.',
+                title: '❌ Kicked From Squad',
+                message: 'Big Brain said bye bye 👋',
                 type: 'error',
-                buttonText: 'Return to Home',
+                buttonText: 'Back to Home Base',
                 buttonAction: () => window.location.href = '/'
             });
         } else {
@@ -567,5 +907,187 @@
             checkMemberCount(data.users);
         }
     });
+
+    function showRaffleAnimation(matchName) {
+        // Create overlay with snowflakes
+        const overlay = document.createElement('div');
+        overlay.className = 'raffle-overlay';
+        overlay.innerHTML = `
+            <div class="snowflakes">
+                ${Array(20).fill().map(() => '<div class="snowflake">❅</div>').join('')}
+            </div>
+            <div class="raffle-paper">
+                <div class="paper-fold paper-fold-top"></div>
+                <div class="paper-fold paper-fold-bottom"></div>
+                <div class="raffle-content">
+                    <div class="countdown-container">
+                        <div class="countdown-ring"></div>
+                        <div class="santa-counter">
+                            <div class="santa-body">
+                                <div class="santa-bottom"></div>
+                                <div class="santa-belt"></div>
+                                <div class="santa-pants"></div>
+                                <div class="santa-shine"></div>
+                            </div>
+                            <div class="countdown"></div>
+                        </div>
+                    </div>
+                    <div class="match-name">
+                        Your Secret Santa Match:<br>
+                        ✨ ${matchName} ✨
+                    </div>
+                    <div class="timer">Closing in 10s...</div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        // Animate snowflakes
+        gsap.to('.snowflake', {
+            opacity: 0.8,
+            duration: 0.5,
+            stagger: 0.1,
+            y: "random(-20, 20)",
+            x: "random(-20, 20)",
+            rotation: "random(-45, 45)"
+        });
+
+        // Animation timeline
+        const tl = gsap.timeline();
+
+        tl.to(overlay, { opacity: 1, duration: 0.5 })
+            // Initial paper appearance
+            .to('.raffle-paper', {
+                height: 450,
+                duration: 1,
+                ease: 'power2.inOut'
+            })
+            // Unfold from top and bottom
+            .to('.paper-fold-top', {
+                opacity: 1,
+                rotationX: -180,
+                duration: 1,
+                ease: 'power2.inOut'
+            }, '-=0.5')
+            .to('.paper-fold-bottom', {
+                opacity: 1,
+                rotationX: 180,
+                duration: 1,
+                ease: 'power2.inOut'
+            }, '-=0.8')
+            .to('.raffle-content', { 
+                opacity: 1, 
+                duration: 0.5,
+                y: [20, 0],
+                ease: 'back.out(1.2)'
+            });
+
+        // Updated countdown animation
+        let count = 3;
+        const countEl = overlay.querySelector('.countdown');
+        countEl.style.opacity = 0;
+
+        function showNumber() {
+            if (count > 0) {
+                // Reset animations
+                gsap.set(countEl, { opacity: 0, scale: 2 });
+                gsap.set('.sparkle', { opacity: 0, scale: 0 });
+
+                // Show number with effects
+                countEl.textContent = count;
+                gsap.to(countEl, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.5,
+                    ease: 'back.out(1.7)'
+                });
+
+                // Santa bounce effect
+                const santa = document.querySelector('.santa-counter');
+                santa.classList.remove('santa-bounce');
+                void santa.offsetWidth; // Trigger reflow
+                santa.classList.add('santa-bounce');
+
+                // Add wiggle effect
+                gsap.to('.santa-counter', {
+                    keyframes: [
+                        { 
+                            scaleY: 0.9, 
+                            scaleX: 1.1, 
+                            duration: 0.15 
+                        },
+                        { 
+                            scaleY: 1.1, 
+                            scaleX: 0.9, 
+                            duration: 0.15 
+                        },
+                        { 
+                            scaleY: 1, 
+                            scaleX: 1, 
+                            duration: 0.2 
+                        }
+                    ],
+                    ease: "power1.inOut"
+                });
+
+                // Add wiggle effect
+                gsap.to('.santa-bottom', {
+                    rotation: [-5, 5, 0],
+                    duration: 0.5,
+                    ease: 'power1.inOut'
+                });
+
+                count--;
+                setTimeout(showNumber, 1000);
+            } else {
+                // Hide countdown, show name
+                gsap.to('.countdown-container', {
+                    opacity: 0,
+                    scale: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                        gsap.to('.match-name', {
+                            opacity: 1,
+                            scale: [0.8, 1],
+                            rotation: [-5, 0],
+                            duration: 1,
+                            ease: 'elastic.out(1, 0.3)'
+                        });
+                        gsap.to('.timer', { opacity: 1, duration: 0.5 });
+
+                        // Start 10 second countdown
+                        let timeLeft = 10;
+                        const timer = setInterval(() => {
+                            timeLeft--;
+                            overlay.querySelector('.timer').textContent = `Closing in ${timeLeft}s...`;
+                            if (timeLeft <= 0) {
+                                clearInterval(timer);
+                                gsap.to(overlay, {
+                                    opacity: 0,
+                                    duration: 0.5,
+                                    onComplete: () => overlay.remove()
+                                });
+                            }
+                        }, 1000);
+                    }
+                });
+            }
+        }
+
+        // Start countdown after paper unfolds
+        tl.add(() => setTimeout(showNumber, 500));
+
+        // Animate snowflakes continuously
+        gsap.to('.snowflake', {
+            y: '+=30',
+            x: '+=10',
+            rotation: '+=45',
+            duration: 2,
+            stagger: 0.1,
+            repeat: -1,
+            yoyo: true,
+            ease: 'none'
+        });
+    }
 </script>
 {% endblock %}

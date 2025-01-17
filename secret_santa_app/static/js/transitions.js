@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Get elements
     const initialButtons = document.getElementById('initial_buttons');
     const createForm = document.getElementById('create_room_form');
     const joinForm = document.getElementById('join_room_form');
+    const showCreateBtn = document.getElementById('show_create_form');
+    const showJoinBtn = document.getElementById('show_join_form');
     const backButtons = document.querySelectorAll('.back-btn');
-    const container = document.querySelector('.christmas-inner-card');
-    const formContainer = document.querySelector('.form-container');
+
+    // Check if we're on the correct page (index page)
+    if (!initialButtons || !createForm || !joinForm) {
+        return; // Exit if we're not on the index page
+    }
 
     function showForm(formElement) {
         // Prepare the transition
@@ -45,14 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Show Create Room Form
-    document.getElementById('show_create_form').addEventListener('click', function() {
-        showForm(createForm);
-    });
+    if (showCreateBtn) {
+        showCreateBtn.addEventListener('click', function() {
+            showForm(createForm);
+        });
+    }
 
     // Show Join Room Form
-    document.getElementById('show_join_form').addEventListener('click', function() {
-        showForm(joinForm);
-    });
+    if (showJoinBtn) {
+        showJoinBtn.addEventListener('click', function() {
+            showForm(joinForm);
+        });
+    }
 
     // Back Button Handler
     backButtons.forEach(button => {
