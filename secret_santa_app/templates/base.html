@@ -170,9 +170,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add loaded class after a short delay
-            document.getElementById('main-content').classList.add('loaded');
-        });
+    // Add a timeout of 100 milliseconds before adding the 'loaded' class
+    setTimeout(function() {
+        document.getElementById('main-content').classList.add('loaded');
+    }, 100);
+});
     </script>
 </body>
 </html> 
