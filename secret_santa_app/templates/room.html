@@ -139,7 +139,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                Begin Secret Santa Exchange
+                Start Exchange
             </button>
             <p id="raffle_warning" class="hidden text-red-500 mt-3 text-center font-medium">
                 ⚠️ Need more homies to start the fun (at least 3)
@@ -603,9 +603,9 @@
     function kickUser(userId) {
         showModal({
             title: '⚠️ Kick',
-            message: 'Fr fr, you wanna kick this homie?',
+            message: 'Fr fr, you wanna kick this homie? 💀',
             type: 'warning',
-            buttonText: 'Yeah, They Gotta Go',
+            buttonText: 'Yeah 😭, They Gotta Go',
             buttonAction: () => {
                 socket.emit('kick_user', {
                     roomCode: roomCode,
@@ -618,7 +618,7 @@
     socket.on('user_kicked', (data) => {
         if (data.kickedUserId === socket.id) {
             showModal({
-                title: '❌ Kicked From Squad',
+                title: '🚫 Kicked From Squad',
                 message: 'Big Brain said bye bye 👋',
                 type: 'error',
                 buttonText: 'Back to Home Base',
