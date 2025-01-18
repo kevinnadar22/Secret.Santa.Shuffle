@@ -40,7 +40,7 @@ function initializeLoading() {
     // Wait for everything to load
     window.addEventListener('load', () => {
         // Add a small delay to ensure smooth transition
-        setTimeout(hideLoading, 1500);
+        hideLoading();
     });
 
     // Fallback: Hide loading if it takes too long

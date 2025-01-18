@@ -237,7 +237,7 @@ footer a:hover {
             rgba(42, 24, 16, 0.7),
             rgba(26, 15, 10, 0.8)
         ),
-        url('/static/images/christmas-pattern.jpg');
+        url('/static/images/christmas-pattern.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
