@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV FLASK_APP run.py
 ENV FLASK_ENV production
-ENV PORT=5000
+ENV PORT 5000
 
 # Create and set working directory
 WORKDIR /app
@@ -31,7 +31,7 @@ RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
 # Expose port
-EXPOSE $PORT 
+EXPOSE ${PORT}
 
 # Run gunicorn with eventlet worker
-CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:$PORT", "run:app"]
+CMD ["sh", "-c", "gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:${PORT} run:app"]
