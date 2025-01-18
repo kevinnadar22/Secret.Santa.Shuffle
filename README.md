@@ -30,6 +30,7 @@
 ## 📋 Table of Contents
 - [Features](#-features)
 - [Quick Start](#-quick-start)
+- [Configuration](#-configuration)
 - [Deployment](#-deployment)
   - [Heroku](#heroku)
   - [Docker](#docker)
@@ -49,7 +50,30 @@
 
 </div>
 
+## ⚙️ Configuration (Optional)
+
+The application uses environment variables for configuration. Create a `.env` file in the root directory:
+
+```env
+# Required
+DOMAIN=http://localhost:5000   # Your application domain
+SECRET_KEY=your_secret_key       # Secret key for session security
+
+# Optional
+DEBUG=False                      # Set to True for development
+```
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DOMAIN` | Application domain URL | http://localhost:5000 |
+| `SECRET_KEY` | Flask secret key | "dev" |
+| `DEBUG` | Debug mode flag | False |
+
+
 ## 🚀 Quick Start
+
 
 ```bash
 # Clone repository
@@ -69,6 +93,7 @@ python run.py
 
 Visit `http://localhost:5000` in your browser.
 
+
 ## 🌐 Deployment
 
 ### Heroku
@@ -86,7 +111,8 @@ One-click deployment:
 docker build -t santa-shuffle .
 
 # Run container
-docker run -p 5000:5000 -e SECRET_KEY=your_secret_key santa-shuffle
+docker run -p 5000:5000 \
+  santa-shuffle
 ```
 
 
@@ -94,20 +120,20 @@ docker run -p 5000:5000 -e SECRET_KEY=your_secret_key santa-shuffle
 
 We welcome contributions! Here's how you can help:
 
-1. 🍴 Fork the repository
-2. 🌿 Create your feature branch
+1. Fork the repository
+2. Create your feature branch
    ```bash
    git checkout -b feature/AmazingFeature
    ```
-3. 💫 Commit your changes
+3. Commit your changes
    ```bash
    git commit -m 'Add some AmazingFeature'
    ```
-4. 📤 Push to the branch
+4. Push to the branch
    ```bash
    git push origin feature/AmazingFeature
    ```
-5. 🎉 Open a Pull Request
+5. Open a Pull Request
 
 ## 📄 License
 
@@ -126,3 +152,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 </p>
 
 </div>
+

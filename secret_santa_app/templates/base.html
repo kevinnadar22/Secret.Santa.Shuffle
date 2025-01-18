@@ -3,6 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Join the festive fun with Secret Santa Shuffle! Create or join gift exchange rooms, match with friends, and spread holiday cheer.">
+    <meta name="keywords" content="Secret Santa, gift exchange, Christmas, holiday, random gift matcher, online Secret Santa">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Kevin Nadar">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:title" content="{% block og_title %}Secret Santa Shuffle - Online Gift Exchange{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Create your Secret Santa gift exchange room, invite friends, and spread holiday joy! 🎄✨{% endblock %}">
+    <meta property="og:image" content="{{ url_for('static', filename='images/santa.png', _external=True) }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ request.url }}">
+    <meta name="twitter:title" content="{% block twitter_title %}Secret Santa Shuffle - Online Gift Exchange{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Create your Secret Santa gift exchange room, invite friends, and spread holiday joy! 🎄✨{% endblock %}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/santa.png', _external=True) }}">
+
+    <!-- Theme Color for browsers -->
+    <meta name="theme-color" content="#dc2626">
+    
+    <!-- Resources -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -12,6 +37,47 @@
     {% block extra_head %}{% endblock %}
     <title>{% block title %}Secret Santa{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+
+    <!-- Schema.org markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Secret Santa Shuffle",
+        "applicationCategory": "Entertainment",
+        "operatingSystem": "Any",
+        "url": "{{ config.DOMAIN }}",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "description": "Create or join Secret Santa gift exchanges online. Match with friends and spread holiday cheer!",
+        "creator": {
+            "@type": "Person",
+            "name": "Kevin Nadar"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Secret Santa Shuffle",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "{{ config.DOMAIN }}/static/images/santa.png"
+            }
+        },
+        "screenshot": "{{ config.DOMAIN }}/static/images/santa.png",
+        "featureList": [
+            "Create gift exchange rooms",
+            "Invite friends",
+            "Random matching",
+            "Real-time updates"
+        ],
+        "datePublished": "2024-01-18",
+        "keywords": "Secret Santa, gift exchange, Christmas, holiday, random gift matcher"
+    }
+    </script>
+
+    {% block schema %}{% endblock %}
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col">

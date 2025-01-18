@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Room {{room_code}} - Secret Santa{% endblock %}
+{% block title %}Secret Santa Room {{room_code}} - Gift Exchange{% endblock %}
+
+{% block og_title %}Secret Santa Room - Join the Holiday Fun!{% endblock %}
+{% block og_description %}Join our Secret Santa gift exchange! Room code: {{room_code}}. Get matched and spread holiday cheer! 🎄🎁{% endblock %}
+
+{% block twitter_title %}Secret Santa Room - Join the Holiday Fun!{% endblock %}
+{% block twitter_description %}Join our Secret Santa gift exchange! Room code: {{room_code}}. Get matched and spread holiday cheer! 🎄🎁{% endblock %}
 
 {% block extra_head %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
@@ -19,6 +25,31 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
     </svg>
 </a>
+{% endblock %}
+
+{% block schema %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Secret Santa Room {{ room_code }}",
+    "description": "Join our Secret Santa gift exchange room and get matched with your gift recipient!",
+    "url": "{{ config.DOMAIN }}/room/{{ room_code }}",
+    "mainEntity": {
+        "@type": "Game",
+        "name": "Secret Santa Room",
+        "gameLocation": {
+            "@type": "VirtualLocation",
+            "name": "Room {{ room_code }}"
+        },
+        "numberOfPlayers": {
+            "@type": "QuantitativeValue",
+            "minValue": "3",
+            "maxValue": "100"
+        }
+    }
+}
+</script>
 {% endblock %}
 
 {% block content %}

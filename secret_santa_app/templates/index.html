@@ -1,6 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Secret Santa - Join or Create Room{% endblock %}
+{% block schema %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Secret Santa Shuffle - Create or Join Gift Exchange",
+    "description": "Start your Secret Santa gift exchange! Create a room or join an existing one to spread holiday cheer.",
+    "url": "{{ config.DOMAIN }}/",
+    "mainEntity": {
+        "@type": "WebApplication",
+        "name": "Secret Santa Shuffle",
+        "applicationCategory": "Entertainment"
+    }
+}
+</script>
+{% endblock %}
+
+{% block title %}Secret Santa Shuffle - Create or Join Gift Exchange{% endblock %}
+
+{% block og_title %}Secret Santa Shuffle - Start Your Holiday Gift Exchange{% endblock %}
+{% block og_description %}Create a Secret Santa room, invite your friends, and start spreading holiday cheer! Easy, fun, and free! 🎅🎁{% endblock %}
+
+{% block twitter_title %}Secret Santa Shuffle - Start Your Holiday Gift Exchange{% endblock %}
+{% block twitter_description %}Create a Secret Santa room, invite your friends, and start spreading holiday cheer! Easy, fun, and free! 🎅🎁{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
