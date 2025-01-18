@@ -31,7 +31,7 @@ RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
 # Expose port
-EXPOSE $PORT
+EXPOSE $PORT 
 
 # Run gunicorn with eventlet worker
 CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:$PORT", "run:app"]
