@@ -22,11 +22,11 @@ def handle_disconnect():
         if request.sid in user_ids:
             # Remove disconnected user
             room.users = [user for user in room.users if user.id != request.sid]
-            
+
             # Handle admin reassignment if needed
             if room.admin.id == request.sid and room.users:
                 room.admin = room.users[0]
-            
+
             # Delete empty rooms
             if not room.users:
                 del Cache.ROOM_CACHE[room_id]
@@ -39,25 +39,36 @@ def handle_disconnect():
 
 @socketio.on("join_room")
 def handle_join_room(data):
-    print(f"Joining room with data: {data}")
+
+    if data["name"] == "None":
+        return
+
     room_code = data["roomCode"]
     if not room_code:
         return
     user = User(id=request.sid, name=data["name"])
 
     if room_code not in Cache.ROOM_CACHE:
-        return emit("room_not_found", {"status": "room_not_found", "message": "Room not found"})
-    
+        return emit(
+            "room_not_found", {"status": "room_not_found", "message": "Room not found"}
+        )
+
     room = Cache.ROOM_CACHE[room_code]
 
     # Check if user already exists in room,
     if user.id in [user.id for user in room.users]:
         emit("room_joined", room.dict(), to=room_code)
         return
-    
+
     # check if user exists by same name, return error message
     if user.name in [user.name for user in room.users]:
-        return emit("error", {"status": "error", "message": "Name already exists in this room, try a different name"})
+        return emit(
+            "error",
+            {
+                "status": "error",
+                "message": "Name already exists in this room, try a different name",
+            },
+        )
 
     # If only one user with empty id exists, remove them and set new user as admin
     if len(room.users) == 0 and room.admin.id == "":
@@ -91,14 +102,15 @@ def handle_start_raffle(data):
 
     emit("raffle_started", room.dict(), to=data["roomCode"])
 
-@socketio.on('kick_user')
+
+@socketio.on("kick_user")
 def handle_kick_user(data):
-    room_code = data.get('roomCode')
-    user_id_to_kick = data.get('userId')
-    
+    room_code = data.get("roomCode")
+    user_id_to_kick = data.get("userId")
+
     room = Cache.ROOM_CACHE.get(room_code)
     if not room:
-        emit('error', {'message': 'Room not found'})
+        emit("error", {"message": "Room not found"})
         return
 
     # Find and remove the kicked user
@@ -111,8 +123,12 @@ def handle_kick_user(data):
 
     if kicked_user:
         # Emit to all users in the room
-        emit('user_kicked', {
-            'kickedUserId': kicked_user.id,
-            'users': [user.to_dict() for user in room.users],
-            'admin': room.admin.to_dict()
-        }, to=room_code)
+        emit(
+            "user_kicked",
+            {
+                "kickedUserId": kicked_user.id,
+                "users": [user.to_dict() for user in room.users],
+                "admin": room.admin.to_dict(),
+            },
+            to=room_code,
+        )
