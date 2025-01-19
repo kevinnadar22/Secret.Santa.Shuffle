@@ -11,7 +11,8 @@ cheer! 🎄🎁{% endblock %}
 holiday cheer! 🎄🎁{% endblock %}
 
 {% block extra_head %}
-<script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+<!-- https://cdn.socket.io/4.8.1/socket.io.min.js -->
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/raffle-animation.css') }}">
