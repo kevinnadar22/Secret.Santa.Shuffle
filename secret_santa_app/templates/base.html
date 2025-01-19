@@ -75,21 +75,6 @@
     </script>
 
     {% block schema %}{% endblock %}
-
-    <style>
-        /* Hide main content initially */
-        #main-content {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-
-        /* Show content when loaded */
-        #main-content.loaded {
-            opacity: 1;
-            transform: translateY(0); 
-        }
-    </style>
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -167,14 +152,5 @@
 
     <script src="{{ url_for('static', filename='js/snow.js') }}"></script>
     <script src="{{ url_for('static', filename='js/transitions.js') }}"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    // Add a timeout of 100 milliseconds before adding the 'loaded' class
-    setTimeout(function() {
-        document.getElementById('main-content').classList.add('loaded');
-    }, 300);
-});
-    </script>
 </body>
 </html> 

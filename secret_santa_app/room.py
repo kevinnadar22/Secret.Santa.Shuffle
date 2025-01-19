@@ -40,7 +40,7 @@ def handle_disconnect():
 @socketio.on("join_room")
 def handle_join_room(data):
 
-    if data["name"] == "None":
+    if not data["name"] or data["name"] == "None":
         return
 
     room_code = data["roomCode"]
@@ -63,7 +63,7 @@ def handle_join_room(data):
     # check if user exists by same name, return error message
     if user.name in [user.name for user in room.users]:
         return emit(
-            "error",
+            "name_error",
             {
                 "status": "error",
                 "message": "Name already exists in this room, try a different name",
