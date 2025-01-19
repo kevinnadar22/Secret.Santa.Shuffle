@@ -199,7 +199,16 @@ holiday cheer! 🎄🎁{% endblock %}
 
 {% block scripts %}
 <script>
-    const socket = io();
+    const socket = io({
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 10000,
+        pingTimeout: 5000,
+        pingInterval: 10000
+    });
+    let isConnecting = false;
     const roomCode = "{{room_code}}";
     const name = "{{name}}";
     let isAdmin = false;
@@ -209,6 +218,7 @@ holiday cheer! 🎄🎁{% endblock %}
     const MAX_JOIN_ATTEMPTS = 3;
 
     socket.on('connect', () => {
+        isConnecting = false;
         console.log('Connected to server');
         if (name) {
             attemptJoinRoom();
@@ -297,19 +307,17 @@ holiday cheer! 🎄🎁{% endblock %}
 
     // Update the connect_error handler
     socket.on('connect_error', (error) => {
-        if (joinRoomTimeout) {
-            clearTimeout(joinRoomTimeout);
+        if (!isConnecting) {
+            isConnecting = true;
+            document.getElementById('loading_indicator').classList.add('hidden');
+            showModal({
+                title: '⚠️ Connection Error',
+                message: 'Having trouble connecting. Retrying...',
+                type: 'warning'
+            });
         }
-        document.getElementById('loading_indicator').classList.add('hidden');
-        console.log('Connection Error:', error);
-        showModal({
-            title: '⚠️ Connection Error',
-            message: 'Having trouble connecting to the server. Attempting to reconnect...',
-            type: 'warning',
-            buttonText: 'Refresh',
-            buttonAction: () => window.location.reload()
-        });
     });
+
 
     // Update the disconnect handler
     socket.on('disconnect', (reason) => {
@@ -321,7 +329,7 @@ holiday cheer! 🎄🎁{% endblock %}
             type: 'warning',
             buttonText: 'OK'
         });
-        
+
         if (reason === 'io server disconnect') {
             socket.connect();
         }
@@ -616,7 +624,7 @@ holiday cheer! 🎄🎁{% endblock %}
         }
     });
 
-    function showNamePromptModal(message="") {
+    function showNamePromptModal(message = "") {
         const modalContent = `
             <div class="bg-amber-50 rounded-xl p-8 max-w-md w-full shadow-xl border border-amber-200">
                 <h3 class="text-2xl font-bold text-amber-800 mb-4">${message ? message : 'Drop Your Name Below'}</h3>

@@ -1,88 +1,103 @@
 import random
 from flask import request
 from .extensions import socketio
-from flask_socketio import emit, join_room
+from flask_socketio import emit, join_room, close_room
 from config import Cache
 from .models import User
 
+# Add connection tracking
+CONNECTED_USERS = {}
 
-# connect to the socket
 @socketio.on("connect")
 def handle_connect():
+    CONNECTED_USERS[request.sid] = {"connected": True, "room": None}
     emit("connection_response", {"status": "connected"})
-
 
 @socketio.on("disconnect")
 def handle_disconnect():
-    for room_id, room in Cache.ROOM_CACHE.items():
-        # Check if user is in this room
-        user_ids = [user.id for user in room.users]
-        if request.sid in user_ids:
-            # Remove disconnected user
-            room.users = [user for user in room.users if user.id != request.sid]
+    user_sid = request.sid
+    if user_sid in CONNECTED_USERS:
+        room_id = CONNECTED_USERS[user_sid].get("room")
+        if room_id:
+            handle_user_disconnect(user_sid, room_id)
+        del CONNECTED_USERS[user_sid]
 
-            # Handle admin reassignment if needed
-            if room.admin.id == request.sid and room.users:
-                room.admin = room.users[0]
+def handle_user_disconnect(user_sid, room_id):
+    room = Cache.ROOM_CACHE.get(room_id)
+    if not room:
+        return
 
-            # Delete empty rooms
-            if not room.users:
-                del Cache.ROOM_CACHE[room_id]
-            else:
-                Cache.ROOM_CACHE[room_id] = room
-                # Emit updated room state to remaining users
-                emit("room_joined", room.dict(), to=room_id)
-            break
+    # Remove disconnected user
+    room.users = [user for user in room.users if user.id != user_sid]
 
+    # Handle admin reassignment if needed
+    if room.admin.id == user_sid and room.users:
+        room.admin = room.users[0]
+
+    # Delete empty rooms and cleanup
+    if not room.users:
+        del Cache.ROOM_CACHE[room_id]
+        close_room(room_id)
+    else:
+        Cache.ROOM_CACHE[room_id] = room
+        emit("room_joined", room.dict(), to=room_id)
 
 @socketio.on("join_room")
 def handle_join_room(data):
+    try:
+        # Input validation
+        if not data.get("name") or not data.get("roomCode"):
+            emit("error", {"message": "Invalid room data"})
+            return
 
-    if not data["name"] or data["name"] == "None":
-        return
+        room_code = data["roomCode"]
+        user = User(id=request.sid, name=data["name"])
 
-    room_code = data["roomCode"]
-    if not room_code:
-        return
-    user = User(id=request.sid, name=data["name"])
+        # Room existence check
+        room = Cache.ROOM_CACHE.get(room_code)
+        if not room:
+            emit("room_not_found", {
+                "status": "room_not_found", 
+                "message": "Room not found"
+            })
+            return
 
-    if room_code not in Cache.ROOM_CACHE:
-        return emit(
-            "room_not_found", {"status": "room_not_found", "message": "Room not found"}
-        )
+        # Duplicate connection check
+        if request.sid in [u.id for u in room.users]:
+            emit("room_joined", room.dict(), to=room_code)
+            return
 
-    room = Cache.ROOM_CACHE[room_code]
-
-    # Check if user already exists in room,
-    if user.id in [user.id for user in room.users]:
-        emit("room_joined", room.dict(), to=room_code)
-        return
-
-    # check if user exists by same name, return error message
-    if user.name in [user.name for user in room.users]:
-        return emit(
-            "name_error",
-            {
+        # Name duplicate check
+        if user.name in [u.name for u in room.users]:
+            emit("name_error", {
                 "status": "error",
-                "message": "Name already exists in this room, try a different name",
-            },
-        )
+                "message": "Name already exists in this room, try a different name"
+            })
+            return
 
-    # If only one user with empty id exists, remove them and set new user as admin
-    if len(room.users) == 0 and room.admin.id == "":
-        room.users = []
-        room.admin = user
+        # Handle first user case
+        if len(room.users) == 0 and room.admin.id == "":
+            room.users = []
+            room.admin = user
 
-    room.users.append(user)
-    Cache.ROOM_CACHE[room_code] = room
-    join_room(room_code)
-    emit("room_joined", room.dict(), to=room_code)
+        # Join room and update state
+        room.users.append(user)
+        Cache.ROOM_CACHE[room_code] = room
+        join_room(room_code)
+        CONNECTED_USERS[request.sid]["room"] = room_code
+        
+        # Notify room
+        emit("room_joined", room.dict(), to=room_code)
 
+    except Exception as e:
+        emit("error", {
+            "message": "Failed to join room. Please try again."
+        })
+        print(f"Error in handle_join_room: {str(e)}")
 
 @socketio.on("leave_room")
 def handle_leave_room(data):
     print(f"Leaving room with data: {data}")
-
 
 @socketio.on("start_raffle")
 def handle_start_raffle(data):
@@ -98,7 +113,6 @@ def handle_start_raffle(data):
     Cache.ROOM_CACHE[data["roomCode"]] = room
 
     emit("raffle_started", room.dict(), to=data["roomCode"])
-
 
 @socketio.on("kick_user")
 def handle_kick_user(data):
