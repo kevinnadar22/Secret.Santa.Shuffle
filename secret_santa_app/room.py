@@ -76,7 +76,6 @@ def handle_join_room(data):
     room.users.append(user)
     Cache.ROOM_CACHE[room_code] = room
     join_room(room_code)
-    # print(room.dict(), file=open("room.json", "w"))
     emit("room_joined", room.dict(), to=room_code)
 
 

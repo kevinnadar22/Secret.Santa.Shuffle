@@ -209,18 +209,57 @@ holiday cheer! 🎄🎁{% endblock %}
     const name = "{{name}}";
     let isAdmin = false;
 
+    let joinRoomTimeout;
+    let joinAttempts = 0;
+    const MAX_JOIN_ATTEMPTS = 3;
+
     socket.on('connect', () => {
         console.log('Connected to server');
+        if (name) {
+            attemptJoinRoom();
+        }
     });
-    if (name) {
+
+    function attemptJoinRoom() {
+        // Clear any existing timeout
+        if (joinRoomTimeout) {
+            clearTimeout(joinRoomTimeout);
+        }
+
         // Show loading indicator
         document.getElementById('loading_indicator').classList.remove('hidden');
         document.getElementById('admin_info').classList.add('hidden');
         document.getElementById('member_list').classList.add('hidden');
 
+        // Emit join room event
         socket.emit('join_room', { roomCode: roomCode, name: name });
+
+        // Set timeout for join room response
+        joinRoomTimeout = setTimeout(() => {
+            joinAttempts++;
+            if (joinAttempts < MAX_JOIN_ATTEMPTS) {
+                console.log(`Join room attempt ${joinAttempts} timed out, retrying...`);
+                attemptJoinRoom();
+            } else {
+                document.getElementById('loading_indicator').classList.add('hidden');
+                showModal({
+                    title: '❌ Connection Error',
+                    message: 'Unable to join the room. Please try refreshing the page.',
+                    type: 'error',
+                    buttonText: 'Refresh',
+                    buttonAction: () => window.location.reload()
+                });
+            }
+        }, 5000); // 5 second timeout
     }
+
     socket.on('room_joined', (data) => {
+        // Clear timeout since we successfully joined
+        if (joinRoomTimeout) {
+            clearTimeout(joinRoomTimeout);
+        }
+        joinAttempts = 0;
+
         // Hide loading indicator
         document.getElementById('loading_indicator').classList.add('hidden');
         document.getElementById('admin_info').classList.remove('hidden');
@@ -261,42 +300,44 @@ holiday cheer! 🎄🎁{% endblock %}
         });
     });
 
-    // Add connection event handlers
+    // Update the connect_error handler
     socket.on('connect_error', (error) => {
+        if (joinRoomTimeout) {
+            clearTimeout(joinRoomTimeout);
+        }
         document.getElementById('loading_indicator').classList.add('hidden');
         console.log('Connection Error:', error);
         showModal({
             title: '⚠️ Connection Error',
             message: 'Having trouble connecting to the server. Attempting to reconnect...',
             type: 'warning',
-            buttonText: 'OK'
-        });
-    });
-
-    socket.on('disconnect', (reason) => {
-        console.log('Disconnected:', reason);
-        if (reason === 'io server disconnect') {
-            // Server disconnected us, try to reconnect
-            socket.connect();
-        }
-        // Else the socket will automatically try to reconnect
-    });
-
-    socket.on('reconnect', (attemptNumber) => {
-        console.log('Reconnected after', attemptNumber, 'attempts');
-        // Re-join the room after reconnection
-        socket.emit('join_room', { roomCode: roomCode, name: name });
-    });
-
-    socket.on('reconnect_error', (error) => {
-        console.log('Reconnection Error:', error);
-        showModal({
-            title: '❌ Connection Failed',
-            message: 'Unable to reconnect to the server. Please refresh the page.',
-            type: 'error',
             buttonText: 'Refresh',
             buttonAction: () => window.location.reload()
         });
+    });
+
+    // Update the disconnect handler
+    socket.on('disconnect', (reason) => {
+        console.log('Disconnected:', reason);
+        document.getElementById('loading_indicator').classList.add('hidden');
+        showModal({
+            title: '📡 Connection Lost',
+            message: 'Lost connection to the server. Attempting to reconnect...',
+            type: 'warning',
+            buttonText: 'OK'
+        });
+        
+        if (reason === 'io server disconnect') {
+            socket.connect();
+        }
+    });
+
+    // Update the reconnect handler
+    socket.on('reconnect', (attemptNumber) => {
+        console.log('Reconnected after', attemptNumber, 'attempts');
+        if (name) {
+            attemptJoinRoom();
+        }
     });
 
     socket.on("name_error", (data) => {
