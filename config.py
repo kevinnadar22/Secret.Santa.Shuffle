@@ -34,6 +34,9 @@ class Config:
     @property
     def CLEAN_DOMAIN(self):
         return self.DOMAIN.replace("http://", "").replace("https://", "")
+    
+    AUTHOR = os.environ.get("AUTHOR", "Kevin Nadar")
+    GOOGLE_ANALYTICS_ID = os.environ.get("GOOGLE_ANALYTICS_ID")
 
 
 class Cache(object):
