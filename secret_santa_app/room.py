@@ -9,13 +9,11 @@ from .models import User
 # connect to the socket
 @socketio.on("connect")
 def handle_connect():
-    print(f"Client connected with sid: {request.sid}")
     emit("connection_response", {"status": "connected"})
 
 
 @socketio.on("disconnect")
 def handle_disconnect():
-    print(f"Client disconnected with sid: {request.sid}")
     for room_id, room in Cache.ROOM_CACHE.items():
         # Check if user is in this room
         user_ids = [user.id for user in room.users]
