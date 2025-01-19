@@ -62,9 +62,11 @@ def handle_join_room(data):
             })
             return
 
-        # Duplicate connection check
+        # Check if user is already in the room
         if request.sid in [u.id for u in room.users]:
-            emit("room_joined", room.dict(), to=room_code)
+            # Only emit room state if user is actually in this room
+            if room_code == CONNECTED_USERS[request.sid].get("room"):
+                emit("room_joined", room.dict(), to=room_code)
             return
 
         # Name duplicate check
