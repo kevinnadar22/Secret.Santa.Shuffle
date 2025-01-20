@@ -17,37 +17,7 @@ holiday cheer! 🎄🎁{% endblock %}
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/raffle-animation.css') }}">
 <script defer src="{{ url_for('static', filename='js/raffle-animation.js') }}"></script>
-<style>
-    .copy-icon,
-    .check-icon {
-        transition: all 0.3s ease;
-    }
 
-    .hidden {
-        display: none;
-        opacity: 0;
-        transform: scale(0.8);
-    }
-
-    #copy_button svg:not(.hidden) {
-        display: block;
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    #wishlist_save_text {
-        transition: opacity 0.2s ease;
-    }
-    
-    #wishlist_tick {
-        transition: all 0.2s ease;
-    }
-    
-    .christmas-button:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-</style>
 {% endblock %}
 
 {% block header_buttons %}

@@ -1314,3 +1314,33 @@ footer a:hover {
     0%, 100% { transform: translateY(-50%) rotate(0deg); }
     50% { transform: translateY(-50%) rotate(15deg); }
 } 
+
+.copy-icon,
+.check-icon {
+    transition: all 0.3s ease;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+#copy_button svg:not(.hidden) {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
+#wishlist_save_text {
+    transition: opacity 0.2s ease;
+}
+
+#wishlist_tick {
+    transition: all 0.2s ease;
+}
+
+.christmas-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
