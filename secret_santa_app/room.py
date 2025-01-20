@@ -8,10 +8,12 @@ from .models import User
 # Add connection tracking
 CONNECTED_USERS = {}
 
+
 @socketio.on("connect")
 def handle_connect():
     CONNECTED_USERS[request.sid] = {"connected": True, "room": None}
     emit("connection_response", {"status": "connected"})
+
 
 @socketio.on("disconnect")
 def handle_disconnect():
@@ -21,6 +23,7 @@ def handle_disconnect():
         if room_id:
             handle_user_disconnect(user_sid, room_id)
         del CONNECTED_USERS[user_sid]
+
 
 def handle_user_disconnect(user_sid, room_id):
     room = Cache.ROOM_CACHE.get(room_id)
@@ -42,6 +45,7 @@ def handle_user_disconnect(user_sid, room_id):
         Cache.ROOM_CACHE[room_id] = room
         emit("room_joined", room.dict(), to=room_id)
 
+
 @socketio.on("join_room")
 def handle_join_room(data):
     try:
@@ -56,10 +60,10 @@ def handle_join_room(data):
         # Room existence check
         room = Cache.ROOM_CACHE.get(room_code)
         if not room:
-            emit("room_not_found", {
-                "status": "room_not_found", 
-                "message": "Room not found"
-            })
+            emit(
+                "room_not_found",
+                {"status": "room_not_found", "message": "Room not found"},
+            )
             return
 
         # Check if user is already in the room
@@ -71,10 +75,13 @@ def handle_join_room(data):
 
         # Name duplicate check
         if user.name in [u.name for u in room.users]:
-            emit("name_error", {
-                "status": "error",
-                "message": "Name already exists in this room, try a different name"
-            })
+            emit(
+                "name_error",
+                {
+                    "status": "error",
+                    "message": "Name already exists in this room, try a different name",
+                },
+            )
             return
 
         # Handle first user case
@@ -87,19 +94,19 @@ def handle_join_room(data):
         Cache.ROOM_CACHE[room_code] = room
         join_room(room_code)
         CONNECTED_USERS[request.sid]["room"] = room_code
-        
+
         # Notify room
         emit("room_joined", room.dict(), to=room_code)
 
     except Exception as e:
-        emit("error", {
-            "message": "Failed to join room. Please try again."
-        })
+        emit("error", {"message": "Failed to join room. Please try again."})
         print(f"Error in handle_join_room: {str(e)}")
+
 
 @socketio.on("leave_room")
 def handle_leave_room(data):
     print(f"Leaving room with data: {data}")
+
 
 @socketio.on("start_raffle")
 def handle_start_raffle(data):
@@ -114,7 +121,18 @@ def handle_start_raffle(data):
         user.secret_santa = users[(i + 1) % len(users)]
     Cache.ROOM_CACHE[data["roomCode"]] = room
 
-    emit("raffle_started", room.dict(), to=data["roomCode"])
+    # emit("raffle_started", room.dict(), to=data["roomCode"])
+    # istead of emiiting all details to all users, emit  only the user's secret santa to individual users
+    for user in users:
+        emit(
+            "raffle_started",
+            {
+                "secret_santa": user.dict(),
+                "admin": room.admin.dict(),
+            },
+            to=user.id,
+        )
+
 
 @socketio.on("kick_user")
 def handle_kick_user(data):

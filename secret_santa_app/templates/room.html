@@ -34,6 +34,19 @@ holiday cheer! 🎄🎁{% endblock %}
         opacity: 1;
         transform: scale(1);
     }
+
+    #wishlist_save_text {
+        transition: opacity 0.2s ease;
+    }
+    
+    #wishlist_tick {
+        transition: all 0.2s ease;
+    }
+    
+    .christmas-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
 </style>
 {% endblock %}
 
@@ -86,9 +99,9 @@ holiday cheer! 🎄🎁{% endblock %}
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
             <div class="text-center sm:text-left">
                 <h1 class="christmas-title text-4xl font-bold">
-                    Squad: {{room_code}}
+                    Code: {{room_code}}
                 </h1>
-                <p class="text-gray-600 mt-2">Drop this code to your homies! 🔥</p>
+                <p class="text-gray-600 mt-2 text-2xl">Drop this code to your homies! 🔥</p>
             </div>
             <div class="flex space-x-2">
                 <button id="share_button" onclick="shareRoom()" title="Share Squad"
@@ -155,6 +168,32 @@ holiday cheer! 🎄🎁{% endblock %}
             <p id="raffle_warning" class="hidden text-red-500 mt-3 text-center font-medium">
                 ⚠️ Need more homies to start the fun (at least 3)
             </p>
+        </div>
+
+        <!-- Wishlist section -->
+        <div class="christmas-inner-card bg-amber-50 relative mt-8">
+            <div class="corner-decoration top-left-decoration"></div>
+            <div class="corner-decoration top-right-decoration"></div>
+            <h2 class="christmas-title text-2xl font-bold mb-4">
+                My Wishlist 🎁
+            </h2>
+            <p class="text-lg font-medium mb-4">
+                This wishlist will be shown to the person you get matched with.
+            </p>
+            <div class="wishlist-editor space-y-4">
+                <textarea id="my_wishlist" 
+                    class="w-full p-4 bg-amber-100 border-2 border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-amber-900 placeholder-amber-600"
+                    rows="4" 
+                    placeholder="a Lamborghini 🚗..."></textarea>
+                
+                <button onclick="updateWishlist()" class="christmas-button w-full text-white relative">
+                    <span id="wishlist_save_text">Save Wishlist</span>
+                    <svg id="wishlist_tick" class="w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden" 
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -276,12 +315,21 @@ holiday cheer! 🎄🎁{% endblock %}
             document.getElementById('admin_controls').classList.remove('hidden');
             checkMemberCount(data.users);
         }
+
+        // Find current user's wishlist
+        const currentUser = data.users.find(user => user.id === socket.id);
+        if (currentUser && currentUser.wishlist) {
+            document.getElementById('my_wishlist').value = currentUser.wishlist;
+        }
     });
 
     socket.on("raffle_started", (data) => {
-        const user = data.users.find(user => user.id === socket.id);
-        if (user && user.secret_santa) {
-            showRaffleAnimation(user.secret_santa.name);
+        const santa = data.secret_santa;
+        if (santa) {
+            showRaffleAnimation(
+                santa.name,
+                santa.wishlist
+            );
         }
     });
 
@@ -699,6 +747,53 @@ holiday cheer! 🎄🎁{% endblock %}
             checkMemberCount(data.users);
         }
     });
+
+    function updateWishlist() {
+        const wishlist = document.getElementById('my_wishlist').value.trim();
+        const saveText = document.getElementById('wishlist_save_text');
+        const tickIcon = document.getElementById('wishlist_tick');
+        const saveButton = tickIcon.parentElement;
+
+        // Disable the button during save
+        saveButton.disabled = true;
+
+        const formData = new FormData();
+        formData.append('wishlist', wishlist);
+        formData.append('room_code', roomCode);
+        formData.append('user_id', socket.id);
+
+        fetch('/update-wishlist', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Hide text, show tick
+                saveText.classList.add('opacity-0');
+                tickIcon.classList.remove('hidden');
+                
+                // Reset after 1 second
+                setTimeout(() => {
+                    saveText.classList.remove('opacity-0');
+                    tickIcon.classList.add('hidden');
+                    saveButton.disabled = false;
+                }, 1000);
+            } else {
+                throw new Error(data.message);
+            }
+        })
+        .catch(error => {
+            // Show error modal only on failure
+            showModal({
+                title: '❌ Error',
+                message: 'Failed to update wishlist: ' + error.message,
+                type: 'error',
+                buttonText: 'OK'
+            });
+            saveButton.disabled = false;
+        });
+    }
 
 </script>
 {% endblock %}

@@ -1,4 +1,4 @@
-function showRaffleAnimation(matchName) {
+function showRaffleAnimation(matchName, wishlist = '') {
     const overlay = document.createElement('div');
     overlay.className = 'raffle-overlay';
     overlay.innerHTML = `
@@ -15,18 +15,13 @@ function showRaffleAnimation(matchName) {
             <div class="match-card">
                 <div class="match-card-content">
                     <h2 class="text-3xl font-bold mb-4">🎄 Your Secret Santa Match 🎄</h2>
-                    <p class="text-4xl font-bold text-red-600">${matchName}</p>
-                    <div class="christmas-note">
-                        Dear Secret Santa,<br>
-                        May your giving be merry and bright! 🎄<br>
-                        Remember, it's not about the price,<br>
-                        but the thought that makes it nice! ✨
+                    <p class="text-4xl font-bold text-red-600 mb-4">${matchName}</p>
+                    ${wishlist ? `
+                    <div class="wishlist-section">
+                        <h4 class="text-lg font-bold mb-2">They're hoping for...</h4>
+                        <p class="text-lg text-amber-800">${wishlist}</p>
                     </div>
-                </div>
-                <div class="timer-wrapper">
-                    <div class="timer-circle"></div>
-                    <div class="timer-circle-fill"></div>
-                    <div class="timer-number">10</div>
+                    ` : ''}
                 </div>
                 <div class="click-hint">Click anywhere to close</div>
             </div>
@@ -130,51 +125,6 @@ function showRaffleAnimation(matchName) {
                             duration: 0.5,
                             delay: 0.5
                         });
-
-                        // Smooth timer countdown
-                        let timeLeft = 10;
-                        const timerNumber = overlay.querySelector('.timer-number');
-                        const timerFill = overlay.querySelector('.timer-circle-fill');
-
-                        // Smooth circle rotation
-                        gsap.to(timerFill, {
-                            rotation: 270,
-                            duration: 10,
-                            ease: 'none'
-                        });
-
-                        // Smooth number countdown
-                        const countdownTl = gsap.timeline();
-                        for (let i = 10; i >= 0; i--) {
-                            countdownTl.to(timerNumber, {
-                                duration: 0.1,
-                                opacity: 0,
-                                scale: 0.8,
-                                onComplete: () => {
-                                    timerNumber.textContent = i;
-                                }
-                            })
-                                .to(timerNumber, {
-                                    duration: 0.2,
-                                    opacity: 1,
-                                    scale: 1,
-                                    ease: 'back.out'
-                                })
-                                .to({}, { duration: 0.7 }); // Wait for the rest of the second
-                        }
-
-                        // Enhanced closing animation
-                        countdownTl.to('.match-card', {
-                            scale: 0.8,
-                            opacity: 0,
-                            duration: 0.5,
-                            ease: 'power2.in'
-                        })
-                            .to(overlay, {
-                                opacity: 0,
-                                duration: 0.5,
-                                onComplete: () => overlay.remove()
-                            });
                     }
                 });
 
@@ -207,21 +157,17 @@ function showRaffleAnimation(matchName) {
     setTimeout(showNumber, 500);
 
     // Add click handler to close overlay
-    overlay.addEventListener('click', (event) => {
-        // Only close if clicking outside the match card
-        if (!event.target.closest('.match-card')) {
-            gsap.to('.match-card', {
-                scale: 0.8,
-                opacity: 0,
-                duration: 0.3,
-                ease: 'power2.in'
-            });
-            gsap.to(overlay, {
-                opacity: 0,
-                duration: 0.3,
-                onComplete: () => overlay.remove()
-            });
-        }
+    overlay.addEventListener('click', () => {
+        gsap.to('.match-card', {
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.3,
+            ease: 'power2.in'
+        });
+        gsap.to(overlay, {
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => overlay.remove()
+        });
     });
-
 }
