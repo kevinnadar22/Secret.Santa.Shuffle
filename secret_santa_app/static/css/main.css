@@ -1231,4 +1231,86 @@ footer a:hover {
     color: var(--cozy-gold);
     position: absolute;
     left: 0;
+}
+
+/* IndieVoice Badge Styling */
+.indie-voice-badge {
+    position: relative;
+    padding: 8px;
+    background: linear-gradient(
+        to bottom,
+        rgba(228, 168, 83, 0.15) 0%,
+        rgba(198, 139, 60, 0.1) 100%
+    );
+    border-radius: 15px;
+    border: 2px solid var(--cozy-gold);
+    box-shadow: 
+        0 4px 15px rgba(228, 168, 83, 0.15),
+        inset 0 0 20px rgba(228, 168, 83, 0.1);
+    transition: all 0.3s ease;
+}
+
+.indie-voice-badge::before,
+.indie-voice-badge::after {
+    content: '✨';
+    position: absolute;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    color: var(--cozy-gold);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.indie-voice-badge::before {
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.indie-voice-badge::after {
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.badge-container {
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.badge-container:hover {
+    transform: translateY(-2px);
+}
+
+.indie-badge {
+    display: block;
+    border-radius: 10px;
+    filter: drop-shadow(0 2px 4px rgba(228, 168, 83, 0.2));
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+.indie-voice-badge:hover {
+    box-shadow: 
+        0 6px 20px rgba(228, 168, 83, 0.2),
+        inset 0 0 30px rgba(228, 168, 83, 0.15);
+    border-color: var(--cozy-gold-light);
+}
+
+/* Add festive animation on hover */
+.indie-voice-badge:hover::before {
+    animation: sparkleLeft 1s ease infinite;
+}
+
+.indie-voice-badge:hover::after {
+    animation: sparkleRight 1s ease infinite;
+}
+
+@keyframes sparkleLeft {
+    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+    50% { transform: translateY(-50%) rotate(-15deg); }
+}
+
+@keyframes sparkleRight {
+    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+    50% { transform: translateY(-50%) rotate(15deg); }
 } 
