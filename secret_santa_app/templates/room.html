@@ -18,6 +18,7 @@ holiday cheer! 🎄🎁{% endblock %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/raffle-animation.css') }}">
 <script defer src="{{ url_for('static', filename='js/raffle-animation.js') }}"></script>
 
+
 {% endblock %}
 
 {% block header_buttons %}
@@ -68,14 +69,22 @@ holiday cheer! 🎄🎁{% endblock %}
         <!-- Room Info -->
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
             <div class="text-center sm:text-left">
-                <h1 class="christmas-title text-4xl font-bold">
-                    Code: {{room_code}}
+                <h1 class="christmas-title text-4xl font-bold flex items-center gap-2">
+                    Code: <span class="select-all cursor-pointer hover:text-amber-500 transition-colors" 
+                                 onclick="copyRoomCode()" 
+                                 title="Click to copy">{{room_code}}</span>
                 </h1>
-                <p class="text-gray-600 mt-2 text-2xl">Drop this code to your homies! 🔥</p>
+                <p class="text-gray-600 mt-2 text-2xl flex items-center gap-2 justify-center sm:justify-start">
+                    <span>Drop this code to your homies!</span>
+                    <span class="animate-bounce">🔥</span>
+                </p>
             </div>
             <div class="flex space-x-2">
                 <button id="share_button" onclick="shareRoom()" title="Share Squad"
-                    class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200 w-10 h-10 flex items-center justify-center">
+                    class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200 w-10 h-10 flex items-center justify-center relative group">
+                    <span class="absolute -top-8 bg-amber-800 text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Share Squad
+                    </span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
@@ -83,15 +92,17 @@ holiday cheer! 🎄🎁{% endblock %}
                     </svg>
                 </button>
                 <button id="copy_button" onclick="copyRoomLink()" title="Copy Link"
-                    class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200 w-10 h-10 flex items-center justify-center">
+                    class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200 w-10 h-10 flex items-center justify-center relative group">
+                    <span class="absolute -top-8 bg-amber-800 text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Copy Link
+                    </span>
                     <svg class="w-5 h-5 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
                         </path>
                     </svg>
                     <svg class="w-5 h-5 check-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                 </button>
             </div>
@@ -108,9 +119,14 @@ holiday cheer! 🎄🎁{% endblock %}
             <!-- Add loading indicator -->
             <div id="loading_indicator" class="py-8">
                 <div class="flex flex-col items-center space-y-4">
-                    <div class="w-12 h-12 border-4 border-amber-600 border-t-transparent rounded-full animate-spin">
+                    <div class="relative">
+                        <div class="w-16 h-16 border-4 border-amber-600 border-t-transparent rounded-full animate-spin"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-2xl">🎄</span>
+                        </div>
                     </div>
-                    <p class="text-amber-800 font-medium animate-pulse">Joining the squad...</p>
+                    <p class="text-amber-800 font-medium animate-pulse text-xl">Joining the squad...</p>
+                    <p class="text-amber-600 text-sm">This won't take long!</p>
                 </div>
             </div>
 
@@ -144,22 +160,32 @@ holiday cheer! 🎄🎁{% endblock %}
         <div class="christmas-inner-card bg-amber-50 relative mt-8">
             <div class="corner-decoration top-left-decoration"></div>
             <div class="corner-decoration top-right-decoration"></div>
-            <h2 class="christmas-title text-2xl font-bold mb-4">
-                My Wishlist 🎁
+            <h2 class="christmas-title text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                My Wishlist <span class="animate-bounce">🎁</span>
             </h2>
-            <p class="text-lg font-medium mb-4">
-                This wishlist will be shown to the person you get matched with.
+            <p class="text-lg font-medium mb-4 text-center text-amber-700">
+                Share your gift wishes! Your Secret Santa will see this list 🎅
             </p>
             <div class="wishlist-editor space-y-4">
-                <textarea id="my_wishlist" 
-                    class="w-full p-4 bg-amber-100 border-2 border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-amber-900 placeholder-amber-600"
-                    rows="4" 
-                    placeholder="a Lamborghini 🚗..."></textarea>
+                <div class="relative">
+                    <textarea id="my_wishlist" 
+                        class="w-full p-4 bg-amber-100 border-2 border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-amber-900 placeholder-amber-600 pr-12"
+                        rows="4" 
+                        placeholder="What's on your wishlist? (e.g., a Lamborghini 🚗✨)"
+                        maxlength="500"></textarea>
+                    <span class="absolute bottom-2 right-2 text-amber-600 text-sm font-medium characters-left">
+                        500
+                    </span>
+                </div>
                 
-                <button onclick="updateWishlist()" class="christmas-button w-full text-white relative">
-                    <span id="wishlist_save_text">Save Wishlist</span>
-                    <svg id="wishlist_tick" class="w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden" 
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="updateWishlist()" 
+                    class="christmas-button w-full text-white relative group overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled>
+                    <div class="gradient-overlay absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                    <span id="wishlist_save_text" class="relative">Save Wishlist</span>
+                    <svg id="wishlist_tick" 
+                        class="w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden" 
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                 </button>
@@ -718,11 +744,44 @@ holiday cheer! 🎄🎁{% endblock %}
         }
     });
 
+    // Update the input handler to enable/disable save button
+    const wishlistTextarea = document.getElementById('my_wishlist');
+    const charactersLeft = document.querySelector('.characters-left');
+    const saveButton = document.querySelector('.wishlist-editor button');
+    
+    wishlistTextarea.addEventListener('input', function() {
+        const remaining = 500 - this.value.length;
+        charactersLeft.textContent = remaining;
+        
+        // Enable/disable save button based on content
+        saveButton.disabled = this.value.trim().length === 0;
+        
+        if (remaining < 50) {
+            charactersLeft.classList.add('text-red-500');
+        } else {
+            charactersLeft.classList.remove('text-red-500');
+        }
+    });
+
+    // Update autosave to check for content
+    let autosaveTimeout;
+    wishlistTextarea.addEventListener('input', function() {
+        clearTimeout(autosaveTimeout);
+        if (this.value.trim().length > 0) {
+            autosaveTimeout = setTimeout(updateWishlist, 1000);
+        }
+    });
+
+    // Update the updateWishlist function
     function updateWishlist() {
         const wishlist = document.getElementById('my_wishlist').value.trim();
         const saveText = document.getElementById('wishlist_save_text');
         const tickIcon = document.getElementById('wishlist_tick');
-        const saveButton = tickIcon.parentElement;
+        const saveButton = tickIcon.closest('button');
+
+        if (!wishlist) {
+            return; // Don't proceed if wishlist is empty
+        }
 
         // Disable the button during save
         saveButton.disabled = true;
@@ -740,30 +799,48 @@ holiday cheer! 🎄🎁{% endblock %}
         .then(data => {
             if (data.status === 'success') {
                 // Hide text, show tick
-                saveText.classList.add('opacity-0');
+                saveText.style.opacity = '0';
                 tickIcon.classList.remove('hidden');
+                tickIcon.style.opacity = '1';
                 
                 // Reset after 1 second
                 setTimeout(() => {
-                    saveText.classList.remove('opacity-0');
+                    saveText.style.opacity = '1';
                     tickIcon.classList.add('hidden');
-                    saveButton.disabled = false;
+                    saveButton.disabled = wishlist.length === 0;
                 }, 1000);
             } else {
                 throw new Error(data.message);
             }
         })
         .catch(error => {
-            // Show error modal only on failure
             showModal({
                 title: '❌ Error',
                 message: 'Failed to update wishlist: ' + error.message,
                 type: 'error',
                 buttonText: 'OK'
             });
-            saveButton.disabled = false;
+            saveButton.disabled = wishlist.length === 0;
         });
     }
+
+    // Initialize save button state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const initialContent = wishlistTextarea.value.trim();
+        saveButton.disabled = initialContent.length === 0;
+    });
+
+    // Add tooltip for room code
+    const roomCodeSpan = document.querySelector('.christmas-title span');
+    roomCodeSpan.addEventListener('click', function() {
+        navigator.clipboard.writeText(roomCode).then(() => {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-amber-800 text-white px-2 py-1 rounded text-sm';
+            tooltip.textContent = 'Copied!';
+            this.appendChild(tooltip);
+            setTimeout(() => tooltip.remove(), 1000);
+        });
+    });
 
 </script>
 {% endblock %}

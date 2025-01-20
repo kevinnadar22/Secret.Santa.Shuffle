@@ -15,16 +15,6 @@ from config import Cache
 bp = Blueprint("main", __name__)
 
 
-# Add cache headers
-@bp.after_request
-def add_header(response):
-    if "Cache-Control" not in response.headers:
-        # Cache static files for longer
-        if request.path.startswith("/static/"):
-            response.cache_control.public = True
-            response.cache_control.max_age = 300  # 5 minutes default cache
-            response.cache_control.max_age = 31536000  # 1 year
-    return response
 
 
 @bp.route("/")
@@ -70,12 +60,12 @@ def room(room_code):
 @bp.route("/update-wishlist", methods=["POST"])
 def update_wishlist():
     """Update a specific user's wishlist in a Secret Santa room
-    
+
     Expected POST data:
         - wishlist: str - The new wishlist content
-        - room_code: str - The room identifier 
+        - room_code: str - The room identifier
         - user_id: str - The ID of the user whose wishlist to update
-        
+
     Returns:
         JSON response indicating success or error
     """
@@ -87,45 +77,44 @@ def update_wishlist():
         user_id = data.get("user_id", "").strip()
 
         if not all([wishlist, room_code, user_id]):
-            return jsonify({
-                "status": "error", 
-                "message": "Missing required fields"
-            }), 400
+            return (
+                jsonify({"status": "error", "message": "Missing required fields"}),
+                400,
+            )
 
         # Get room from cache
         room = Cache.ROOM_CACHE.get(room_code)
         if not room:
-            return jsonify({
-                "status": "error", 
-                "message": "Room not found"
-            }), 404
+            return jsonify({"status": "error", "message": "Room not found"}), 404
 
         # Find and update specific user's wishlist
         user = next((user for user in room.users if user.id == user_id), None)
         if not user:
-            return jsonify({
-                "status": "error", 
-                "message": "User not found in room"
-            }), 404
+            return (
+                jsonify({"status": "error", "message": "User not found in room"}),
+                404,
+            )
 
         # Update wishlist and save back to cache
         user.wishlist = wishlist
         Cache.ROOM_CACHE[room_code] = room
 
-        return jsonify({
-            "status": "success",
-            "message": "Wishlist updated successfully",
-            "data": {
-                "user_id": user_id,
-                "wishlist": wishlist
-            }
-        }), 200
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "message": "Wishlist updated successfully",
+                    "data": {"user_id": user_id, "wishlist": wishlist},
+                }
+            ),
+            200,
+        )
 
     except Exception as e:
-        return jsonify({
-            "status": "error", 
-            "message": f"An error occurred: {str(e)}"
-        }), 500
+        return (
+            jsonify({"status": "error", "message": f"An error occurred: {str(e)}"}),
+            500,
+        )
 
 
 @bp.route("/sitemap.xml")
