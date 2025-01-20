@@ -15,6 +15,13 @@ from config import Cache
 bp = Blueprint("main", __name__)
 
 
+# Add cache headers
+@bp.after_request
+def add_header(response):
+    if "Cache-Control" not in response.headers:
+        response.cache_control.public = True
+        response.cache_control.max_age = 60 * 15  # 15 minutes default cache
+    return response
 
 
 @bp.route("/")
