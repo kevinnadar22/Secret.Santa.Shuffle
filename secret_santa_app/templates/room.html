@@ -56,8 +56,8 @@ holiday cheer! 🎄🎁{% endblock %}
 {% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <div class="christmas-inner-card relative mb-8">
+<div class="max-w-4xl mx-auto w-full">
+    <div class="christmas-inner-card relative mb-8 px-2 sm:px-6">
         <!-- Decorative Elements -->
         <div class="festive-border"></div>
         <div class="candy-cane-border"></div>
@@ -67,7 +67,7 @@ holiday cheer! 🎄🎁{% endblock %}
         <div class="corner-decoration bottom-right-decoration"></div>
 
         <!-- Room Info -->
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 mb-8">
             <div class="text-center sm:text-left">
                 <h1 class="christmas-title text-4xl font-bold flex items-center gap-2">
                     Code: <span class="select-all cursor-pointer hover:text-amber-500 transition-colors" 
@@ -79,7 +79,7 @@ holiday cheer! 🎄🎁{% endblock %}
                     <span class="animate-bounce">🔥</span>
                 </p>
             </div>
-            <div class="flex space-x-2">
+            <div class="flex space-x-2 flex-shrink-0">
                 <button id="share_button" onclick="shareRoom()" title="Share Squad"
                     class="christmas-button p-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition duration-200 w-10 h-10 flex items-center justify-center relative group">
                     <span class="absolute -top-8 bg-amber-800 text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -195,9 +195,9 @@ holiday cheer! 🎄🎁{% endblock %}
     </div>
 
     <!-- Rules Card -->
-    <div class="how-it-works mt-8">
+    <div class="how-it-works mt-8 px-2 sm:px-0">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">How We Roll</h2>
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
                 <div class="flex flex-col items-center text-center">
                     <div
